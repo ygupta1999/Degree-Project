@@ -8,6 +8,7 @@
 This code is run from independent workspaces from terminals inside VScode at the top level
 ### Install and run Agular
 - npm install -g @angular/cli
+- ng add @angular/fire
 - ng serve
 
 ### Install and run Django

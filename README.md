@@ -1,8 +1,8 @@
 # Helius V1.1
 
-## Basics
-https://docs.djangoproject.com/en/3.1/intro/tutorial01/
-https://angular.io/start/start-deployment
+## Basics Doucmentation
+- https://docs.djangoproject.com/en/3.1/intro/tutorial01/
+- https://angular.io/start/start-deployment
 
 ## Setup Enviorment
 This code is run from independent workspaces from terminals inside VScode at the top level

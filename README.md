@@ -3,9 +3,13 @@
 ## Basics Doucmentation
 - https://docs.djangoproject.com/en/3.1/intro/tutorial01/
 - https://angular.io/start/start-deployment
+- https://www.django-rest-framework.org/#installation
 
 ## Setup Enviorment
 This code is run from independent workspaces from terminals inside VScode at the top level
+
+### Install REST
+- https://www.django-rest-framework.org/#installation
 ### Install and run Agular
 - npm install -g @angular/cli
 - ng add @angular/fire
@@ -14,6 +18,8 @@ This code is run from independent workspaces from terminals inside VScode at the
 ### Install and run Django
 - python -m pip install Django
 - python manage.py runserver
+
+
 
 ## Testing
 - If you go to django site and add /admin, you can add movies which will be reflected in the homepage of Helius

@@ -1,0 +1,11 @@
+<!--  -->
+<h2>Movie Listing Test!</h2>
+<ul>
+  <!-- *ngFor is for accessing component data in angular -->
+  <li *ngFor="let movie of movies">
+    <h1>{{movie.title}}</h1>
+  </li>
+</ul>
+
+<!-- Added from previous example -->
+<button (click)="logout()">Logout</button>

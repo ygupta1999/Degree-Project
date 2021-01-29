@@ -1,26 +1,56 @@
+//Basic Routing
+import { AppRoutingModule } from './app-routing.module';
+
+//From https://github.com/angular/angularfire/blob/master/docs/install-and-setup.md
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
-//Added for firebase use
 import { AngularFireModule } from '@angular/fire';
+import { environment } from '../environments/environment';
+import { AngularFireAnalyticsModule } from '@angular/fire/analytics';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+
+
+//Added for firebase authentication
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { AngularFireDatabaseModule } from "@angular/fire/database";
 import { HomeComponent } from './home/home.component';
 import { FirebaseService } from './services/firebase.service';
 
+
+//From https://stackoverflow.com/questions/52523258/angularfire2-cant-find-module-firebase-app/55237532
+//import { AngularFireAuth } from '@angular/fire/auth';
+
+
+
 //Added fro htttp connections connection
 import { HttpClientModule } from '@angular/common/http'
+
+//added from https://www.youtube.com/watch?v=TucRRB57fi8&t=336s
+import {FormsModule} from '@angular/forms';
+import { ProfileComponent } from './profile/profile.component';
+import { WalletComponent } from './wallet/wallet.component';
+import { HistoryComponent } from './history/history.component';
+import { MarketComponent } from './market/market.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
+    ProfileComponent,
+    WalletComponent,
+    HistoryComponent,
+    MarketComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
+    AngularFireAnalyticsModule,
+    AngularFirestoreModule,
+    AngularFireModule.initializeApp(environment.firebase),
+
 
     //Firebase setup
     AngularFireModule.initializeApp({
@@ -39,7 +69,7 @@ import { HttpClientModule } from '@angular/common/http'
     //For HTTP connecting
     HttpClientModule
   ],
-  providers: [FirebaseService],
+  providers: [ FirebaseService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,50 +1,58 @@
-<!--This is the main HTML of the Login Page-->
-<div>
-  <h1>Welcome to Helius!</h1>
+<!--This is the main HTML of the Login Page -->
+
+<!--CSS Styles for centering -->
+<style>
+  .container { 
+    height: 100px;
+    position: relative;
+  }
+  
+  .vertical-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+  
+  .center {
+  text-align: center;
+  }
+  </style>
+<!--end of CSS Styles for centering -->
+
+
+<!--Title of page -->
+<div class="container">
+  <div class="center">
+    <h1>Welcome to Helius!</h1>
+  </div>
 </div>
+<!--End of Title of page -->
 
-<!--This is from movie example for testing
 
-TODO
-- not reading the data from django
--->
-
-<div>
-  <h2>Movie Listing Test!</h2>
+<!-- Templete for reading from firestore
 <ul>
-  <!-- *ngFor is for accessing component data in angular -->
-  <li *ngFor="let movie of movies">
-    <h1>{{movie.title}}</h1>
+  <li class="text" *ngFor="let name of Users | async">
+    {{name.name}}
   </li>
 </ul>
-</div>
+End of template for reading from firestore--> 
 
 
-<!--Sign up functionality
-TODO
-- not working at all
--->
 
-<!-- 
-<div *ngIf="!isSignedIn">
-  <h2>Sign Up</h2>
-  <input type="text" #emailSignup/>
-  <input type="text" #passwordSignup/>
-  <button (click)="onSignup(emailSignup.value,passwordSignup.value)">Sign Up</button>
-</div>
--->
-<!--Sign in functionality
-TODO
-- password not hidden
--->
-
-<hr>
-<div *ngIf="!isSignedIn">
+<!--Sign in component -->
+<div class="center" *ngIf="!isSignedIn">
   <h2>Sign In</h2>
   <input type="text" value="test@helius.com" #email/>
   <input type="text" value="123456" #password/>
   <button (click)="onSignin(email.value,password.value)">Sign In</button>
 </div>
+<!--End of Sign in component -->
 
-
+<!--Logout Handler -->
 <app-home *ngIf="isSignedIn" (isLogout)="handleLogout()"></app-home>
+<!--End of Logout Handler -->
+
+
+

@@ -1,10 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+//This file handles most of the logic throughout the compnent
+
+//Imports
+import { Component } from '@angular/core';
+
+//From https://github.com/angular/angularfire/blob/master/docs/install-and-setup.md
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 //These are sevices we use to connect to stuff
 //Taken from the services folder
 import { FirebaseService } from './services/firebase.service';
 import { ApiService } from './services/api.service'; 
 
+
+//Component defintion
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -12,52 +21,46 @@ import { ApiService } from './services/api.service';
   providers: [ApiService]
 })
 
-export class AppComponent implements OnInit {
+//Basiclly the main() of the compnent 
+export class AppComponent  {
 
   //Variable declerations
   title = 'helius';
   isSignedIn = false;
-  movies = [{title: 'Titanic'}];
+  
+  //For reading firestore data
+  Users: Observable<any[]>;
 
-  //constructor(private api:ApiService){ 
-  //  ;this.getMovies()
-
-  //}
-
-     //TODO
-    //- Cant target services file
-  getMovies = () => {
-
+  //Initializes firebase and all its services
+  constructor(
+    public firebaseService : FirebaseService,
+    private api : ApiService, 
+    firestore : AngularFirestore ) {
     
-    this.api.getAllMovies().subscribe(
-      data => {
-        this.movies = data
-      },
-      error => {
-        console.log(error);
-      }
-    )
-  }
+      //Firestore reading logic
+      this.Users = firestore.collection('Users').valueChanges();
 
-  //Initializes firebase
-  constructor(public firebaseService : FirebaseService, private api:ApiService ){}
+    }
+    
   ngOnInit(){
 
     //Checking if user is signed in
     if(localStorage.getItem('user')!== null)
-    this.isSignedIn = true
+      this.isSignedIn = true
     else
-    this.isSignedIn = false
+      this.isSignedIn = false
 
-    ;this.getMovies()
   }
 
   //Handles signup functionality
+  //TODO
+  /*
   async onSignup(email: string, password:string){
     await this.firebaseService.signup(email,password)
     if(this.firebaseService.isLoggedIn)
     this.isSignedIn = true
   }
+  */
 
   //Handles signin functionality
   async onSignin(email: string, password:string){
@@ -70,7 +73,5 @@ export class AppComponent implements OnInit {
   handleLogout(){
     this.isSignedIn = false
   }
-
-  
 
 }

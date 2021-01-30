@@ -1,4 +1,9 @@
-# Helius V1.1
+# Helius V1.2
+
+## Authors
+- Marko Javorac
+- Yash Gupta
+- Shaun Cyr
 
 ## Basics Doucmentation
 - https://docs.djangoproject.com/en/3.1/intro/tutorial01/
@@ -6,21 +11,33 @@
 
 ## Setup Enviorment
 This code is run from independent workspaces from terminals inside VScode at the top level
-### Install and run Agular
+
+### Install Agular
+- https://angular.io/start/start-deployment
 - npm install -g @angular/cli
 - ng add @angular/fire
+
+### Run Helius
 - ng serve
 
-### Install and run Django
+### Install Django
+- https://docs.djangoproject.com/en/3.1/intro/tutorial01/
 - python -m pip install Django
+
+### Run D
 - python manage.py runserver
 
 ## Testing
-- If you go to django site and add /admin, you can add movies which will be reflected in the homepage of Helius
 - You can login with the preset email and pass to demo functionality
 - If you have anyther instances or django or angular running, you will have to add permissions to the port numbers in django
 
-## ToDo
-- add firebase database connections so each user willl have fields like name and address one they login
-- attempted to add the movie thing to a sections of once the user logins but not done yet
+## Status
+### 1.1
+- initial update
+### 1.2 -01/29/2021
+- UI overhaul
+- Created all major components
+- Connected to firebase DB
+- Cleaned up old code fragments
+- removed "movie" info features
 

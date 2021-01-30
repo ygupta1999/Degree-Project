@@ -34,7 +34,7 @@ This code is run from independent workspaces from terminals inside VScode at the
 ## Status
 ### 1.1
 - initial update
-### 1.2 -01/29/2021
+### 1.2 - 01/29/2021
 - UI overhaul
 - Created all major components
 - Connected to firebase DB

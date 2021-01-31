@@ -41,3 +41,6 @@ This code is run from independent workspaces from terminals inside VScode at the
 - Cleaned up old code fragments
 - removed "movie" info features
 
+## TODO
+- REST at https://openblockchain.readthedocs.io/en/latest/API/CoreAPI/#to-set-up-swagger-ui
+

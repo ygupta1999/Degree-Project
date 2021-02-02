@@ -1,4 +1,4 @@
-# Helius V1.2
+# Helius V2.0
 
 ## Authors
 - Marko Javorac
@@ -8,24 +8,33 @@
 ## Basics Doucmentation
 - https://docs.djangoproject.com/en/3.1/intro/tutorial01/
 - https://angular.io/start/start-deployment
+- https://hyperledger-fabric.readthedocs.io/en/latest/whatis.html
 
-## Setup Enviorment
-This code is run from independent workspaces from terminals inside VScode at the top level
+## Prereq
+### NodeJS
+- TODO
 
-### Install Agular
+### Docker
+- TODO
+
+### Agular
 - https://angular.io/start/start-deployment
 - npm install -g @angular/cli
 - ng add @angular/fire
 
-### Run Helius
-- ng serve
-
-### Install Django
+### Django
 - https://docs.djangoproject.com/en/3.1/intro/tutorial01/
 - python -m pip install Django
 
-### Run D
+## Execute
+### Helius Frontend
+- ng serve
+
+### Helius Backend
 - python manage.py runserver
+
+### Fabric
+- TODO
 
 ## Testing
 - You can login with the preset email and pass to demo functionality
@@ -40,7 +49,13 @@ This code is run from independent workspaces from terminals inside VScode at the
 - Connected to firebase DB
 - Cleaned up old code fragments
 - removed "movie" info features
+### 2.0 - 02/02/2021
+- Began intgrating fabric
+- Developing in Ubuntu
+- Restructured Code
+- removed artifacts
 
 ## TODO
+- Make install requriments script
 - REST at https://openblockchain.readthedocs.io/en/latest/API/CoreAPI/#to-set-up-swagger-ui
 

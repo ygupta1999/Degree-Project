@@ -1,0 +1,60 @@
+<!-- Once user has logegd in, they see this home page  -->
+
+<!-- CSS Style  -->
+<style>
+  button {
+    display: block;
+  }
+
+  .center {
+  text-align: center;
+  }
+  </style>
+<!-- End of CSS Style  -->
+
+
+<!-- Ttile based on logged in placeholder user  -->
+<h2  class="center" lass="text" *ngFor="let name of Users | async">{{name.name}} Homepage</h2>
+
+
+
+<!-- Button Activation for diffrent sections -->
+<div id="home" *ngIf="Home">
+  <app-home></app-home>
+</div>
+
+<div id="profile" *ngIf="Profile">
+  <app-profile></app-profile>
+</div>
+
+<div id="wallet" *ngIf="Wallet">
+  <app-wallet></app-wallet>
+</div>
+
+<div id="history" *ngIf="History">
+  <app-history></app-history>
+</div>
+
+<div id="market" *ngIf="Market">
+  <app-market></app-market>
+</div>
+
+<!-- Templete for reading from Firebase
+<li class="text" *ngFor="let name of Users | async">
+  {{name.name}}
+</li>
+End of template for reading from Firebase-->
+
+
+<!-- Navigation Toolbar  -->
+<button (click)="showHome()" class="btn home">Home</button>
+<button (click)="showProfile()" class="btn profile">Profile</button>
+<button (click)="showWallet()" class="btn wallet">Wallet</button>
+<button (click)="showHistory()"class="btn history">History</button>
+<button (click)="showMarket()"class="btn market">Market</button>
+
+
+
+<!-- Logout functionality -->
+<button (click)="logout()">Logout</button>
+<!-- End of Navigation Toolbar  -->

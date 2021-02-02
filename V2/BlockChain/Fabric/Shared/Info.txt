@@ -1,0 +1,2 @@
+Marko Note
+- I use this folder as the shared folder for UbuntuVM

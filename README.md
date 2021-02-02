@@ -41,14 +41,16 @@
 - If you have anyther instances or django or angular running, you will have to add permissions to the port numbers in django
 
 ## Status
-### 1.1
+### 1.1 - 01/16/2021
 - initial update
+
 ### 1.2 - 01/29/2021
 - UI overhaul
 - Created all major components
 - Connected to firebase DB
 - Cleaned up old code fragments
 - removed "movie" info features
+
 ### 2.0 - 02/02/2021
 - Began intgrating fabric
 - Developing in Ubuntu

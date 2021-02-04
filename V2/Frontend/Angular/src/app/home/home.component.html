@@ -9,14 +9,31 @@
   .center {
   text-align: center;
   }
+
   </style>
 <!-- End of CSS Style  -->
 
+<!-- Navigation Toolbar  -->
+<mat-toolbar>
 
-<!-- Ttile based on logged in placeholder user  -->
-<h2  class="center" lass="text" *ngFor="let name of Users | async">{{name.name}} Homepage</h2>
+  <!-- Ttile based on logged in placeholder user  -->
+  <span></span>
+  <span class="example-spacer" *ngFor="let name of Users | async">{{name.name}}</span>
+<button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+  <mat-icon>menu</mat-icon>
+  
 
-
+</button><mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="showHome()" class="btn home">Home</button>
+  <button mat-menu-item (click)="showProfile()" class="btn profile">Profile</button>
+  <button mat-menu-item (click)="showWallet()" class="btn wallet">Wallet</button>
+  <button mat-menu-item (click)="showHistory()"class="btn history">History</button>
+  <button mat-menu-item (click)="showMarket()"class="btn market">Market</button>
+  <button mat-menu-item (click)="logout()">Logout</button>
+  
+</mat-menu>
+</mat-toolbar>
+ <!-- End of Navigation Toolbar  -->
 
 <!-- Button Activation for diffrent sections -->
 <div id="home" *ngIf="Home">
@@ -46,15 +63,13 @@
 End of template for reading from Firebase-->
 
 
-<!-- Navigation Toolbar  -->
+<!-- Navigation Toolbar  
 <button (click)="showHome()" class="btn home">Home</button>
 <button (click)="showProfile()" class="btn profile">Profile</button>
 <button (click)="showWallet()" class="btn wallet">Wallet</button>
 <button (click)="showHistory()"class="btn history">History</button>
 <button (click)="showMarket()"class="btn market">Market</button>
 
+-->
 
 
-<!-- Logout functionality -->
-<button (click)="logout()">Logout</button>
-<!-- End of Navigation Toolbar  -->

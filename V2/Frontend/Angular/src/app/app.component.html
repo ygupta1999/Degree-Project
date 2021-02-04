@@ -17,7 +17,10 @@
   
   .center {
   text-align: center;
+  margin: 30px;
   }
+
+
   </style>
 <!--end of CSS Styles for centering -->
 
@@ -25,28 +28,28 @@
 <!--Title of page -->
 <div class="container">
   <div class="center">
-    <h1>Welcome to Helius!</h1>
+    <h1>HELIUS</h1>
+
   </div>
 </div>
 <!--End of Title of page -->
 
 
-<!-- Templete for reading from firestore
-<ul>
-  <li class="text" *ngFor="let name of Users | async">
-    {{name.name}}
-  </li>
-</ul>
-End of template for reading from firestore--> 
-
-
 
 <!--Sign in component -->
 <div class="center" *ngIf="!isSignedIn">
-  <h2>Sign In</h2>
-  <input type="text" value="test@helius.com" #email/>
-  <input type="text" value="123456" #password/>
-  <button (click)="onSignin(email.value,password.value)">Sign In</button>
+  <form class="example-form">
+    <mat-form-field class="example-full-width">
+      <mat-label>Email</mat-label>
+      <input matInput placeholder="Ex. Pizza" value="test@helius.com" #email>
+    </mat-form-field>
+  
+    <mat-form-field class="example-full-width">
+      <mat-label>Password</mat-label>
+      <input matInput placeholder="Ex. It makes me feel..." value="123456" #password>
+    </mat-form-field>
+    <button mat-raised-button (click)="onSignin(email.value,password.value)">Sign In</button>
+  </form>
 </div>
 <!--End of Sign in component -->
 

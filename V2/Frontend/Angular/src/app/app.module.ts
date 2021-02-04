@@ -32,6 +32,18 @@ import { ProfileComponent } from './profile/profile.component';
 import { WalletComponent } from './wallet/wallet.component';
 import { HistoryComponent } from './history/history.component';
 import { MarketComponent } from './market/market.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+//Angular Material Stuff
+import { MatSliderModule } from '@angular/material/slider';
+import { MatMenuModule } from '@angular/material/menu';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatInputModule} from '@angular/material/input';
+
+
+
 
 
 @NgModule({
@@ -42,6 +54,7 @@ import { MarketComponent } from './market/market.component';
     WalletComponent,
     HistoryComponent,
     MarketComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -50,6 +63,12 @@ import { MarketComponent } from './market/market.component';
     AngularFireAnalyticsModule,
     AngularFirestoreModule,
     AngularFireModule.initializeApp(environment.firebase),
+    MatSliderModule,
+    MatMenuModule,
+    MatIconModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatInputModule,
 
 
     //Firebase setup
@@ -67,7 +86,9 @@ import { MarketComponent } from './market/market.component';
     AngularFireDatabaseModule,
 
     //For HTTP connecting
-    HttpClientModule
+    HttpClientModule,
+
+    BrowserAnimationsModule
   ],
   providers: [ FirebaseService ],
   bootstrap: [AppComponent]

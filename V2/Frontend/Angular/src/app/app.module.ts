@@ -41,6 +41,10 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatInputModule} from '@angular/material/input';
+import {MatListModule} from '@angular/material/list';
+import {MatGridListModule} from '@angular/material/grid-list';
+
+
 
 
 
@@ -69,6 +73,8 @@ import {MatInputModule} from '@angular/material/input';
     MatButtonModule,
     MatToolbarModule,
     MatInputModule,
+    MatListModule,
+    MatGridListModule,
 
 
     //Firebase setup

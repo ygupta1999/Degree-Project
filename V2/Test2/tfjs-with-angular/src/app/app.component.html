@@ -1,0 +1,98 @@
+<div class="tfjs-example-container centered-container">
+  <section class="title-area">
+    <h1>TensorFlow.js: Addition RNN</h1>
+    <p class="subtitle">Train a model to learn addition by example</p>
+  </section>
+  <section>
+    <p class="section-head">Description</p>
+    <p>
+      This example trains a
+      <a href="https://en.wikipedia.org/wiki/Recurrent_neural_network"
+        >Recurrent Neural Network</a
+      >
+      to do addition without explicitly defining the addition operator. Instead
+      we feed it examples of sums and let it learn from that.
+    </p>
+    <p>
+      Given a <span class="in-type">string</span> like
+      <span class="in-example">3 + 4</span>, it will learn to output a
+      <span class="out-type">number</span> like
+      <span class="out-example">7</span>.
+    </p>
+    <p>
+      This example generates it's own training data programatically.
+    </p>
+  </section>
+
+  <div>
+    <section>
+      <p class="section-head">Instructions</p>
+      <p>
+        Click the "Train Model" to start the model training button. You can edit
+        the parameters used to train the model as well.
+      </p>
+    </section>
+
+    <div class="controls with-rows">
+      <div class="settings">
+        <div class="setting">
+          <span class="setting-label">Digits:</span>
+          <input id="digits" value="2" />
+        </div>
+        <div class="setting">
+          <span class="setting-label">Training Size:</span>
+          <input id="trainingSize" value="5000" />
+        </div>
+        <div class="setting">
+          <span class="setting-label">RNN Type:</span>
+          <select id="rnnType">
+            <option value="SimpleRNN">SimpleRNN</option>
+            <option value="GRU">GRU</option>
+            <option value="LSTM">LSTM</option>
+          </select>
+        </div>
+        <div class="setting">
+          <span class="setting-label">RNN Layers:</span>
+          <input id="rnnLayers" value="1" />
+        </div>
+        <div class="setting">
+          <span class="setting-label">RNN Hidden Layer Size:</span>
+          <input id="rnnLayerSize" value="128" />
+        </div>
+        <div class="setting">
+          <span class="setting-label">Batch Size:</span>
+          <input id="batchSize" value="128" />
+        </div>
+        <div class="setting">
+          <span class="setting-label">Train Iterations:</span>
+          <input id="trainIterations" value="100" />
+        </div>
+        <div class="setting">
+          <span class="setting-label"># of test examples:</span>
+          <input id="numTestExamples" value="20" />
+        </div>
+      </div>
+
+      <div>
+        <span>
+          <button class="btn-primary" id="trainModel">Train Model</button>
+        </span>
+      </div>
+    </div>
+
+    <section>
+      <p class="section-head">Training Progress</p>
+      <p id="trainStatus"></p>
+      <div class="with-cols">
+        <div id="lossChart"></div>
+        <div id="accuracyChart"></div>
+        <!-- <div id="examplesPerSecCanvas"></div> -->
+      </div>
+    </section>
+
+    <section>
+      <p class="section-head">Test Examples</p>
+      <p id="testExamples"></p>
+    </section>
+  </div>
+</div>

@@ -80,6 +80,7 @@ class Blockchain:
         return computed_hash
 
     def add_new_transaction(self, transaction):
+        print("Adding new message, not yet mined")
         self.unconfirmed_transactions.append(transaction)
 
     @classmethod
@@ -118,6 +119,7 @@ class Blockchain:
         and figuring out Proof Of Work.
         """
         if not self.unconfirmed_transactions:
+            print("No messages to mine")
             return False
 
         last_block = self.last_block
@@ -132,6 +134,8 @@ class Blockchain:
 
         self.unconfirmed_transactions = []
 
+        print("Mining complete")
+
         return True
 
 
@@ -143,6 +147,15 @@ blockchain.create_genesis_block()
 
 # the address to other participating members of the network
 peers = set()
+
+import socket
+hostname = socket.gethostname()
+local_ip = socket.gethostbyname(hostname)
+myIP = str(local_ip + ":8000")
+
+print(myIP)
+
+peers.add(myIP)
 
 
 # endpoint to submit a new transaction. This will be used by
@@ -160,7 +173,7 @@ def new_transaction():
 
     blockchain.add_new_transaction(tx_data)
 
-    return "Success", 201
+    return (mine_unconfirmed_transactions())
 
 
 # endpoint to return the node's copy of the chain.
@@ -181,13 +194,15 @@ def get_chain():
 # a command to mine from our application itself.
 @app.route('/mine', methods=['GET'])
 def mine_unconfirmed_transactions():
+    print("Starting mining")
+
     result = blockchain.mine()
     if not result:
+        print("Cant find transactions to mine")
         return "No transactions to mine"
     else:
         # Making sure we have the longest chain before announcing to the network
         chain_length = len(blockchain.chain)
-        consensus()
         if chain_length == len(blockchain.chain):
             # announce the recently mined block to the network
             announce_new_block(blockchain.last_block)
@@ -197,16 +212,19 @@ def mine_unconfirmed_transactions():
 # endpoint to add new peers to the network.
 @app.route('/register_node', methods=['POST'])
 def register_new_peers():
-    node_address = request.get_json()["node_address"]
+    node_address = request.get_json(force=True)["node_address"]
     if not node_address:
         return "Invalid data", 400
 
     # Add the node to the peer list
     peers.add(node_address)
 
+    consensus()
+
     # Return the consensus blockchain to the newly registered node
     # so that he can sync
     return get_chain()
+
 
 
 @app.route('/register_with', methods=['POST'])
@@ -216,15 +234,22 @@ def register_with_existing_node():
     register current node with the node specified in the
     request, and sync the blockchain as well as peer data.
     """
+    print("Requested Address of node: " + request.get_json()["node_address"])
     node_address = request.get_json()["node_address"]
     if not node_address:
         return "Invalid data", 400
 
-    data = {"node_address": request.host_url}
+    # The issue is this next line is returning 127.0.0.1:8000 instead of the actual IP address
+    # Since it was designed to have the other host tell them to register itself, not the user tell
+    # it to register an addgress
+    import socket
+    hostname = socket.gethostname()
+    local_ip = socket.gethostbyname(hostname)
+    data = {"node_address": local_ip + ":8000"}
     headers = {'Content-Type': "application/json"}
 
     # Make a request to register with remote node and obtain information
-    response = requests.post(node_address + "/register_node",
+    response = requests.post("http://" + node_address + "/register_node",
                              data=json.dumps(data), headers=headers)
 
     if response.status_code == 200:
@@ -233,7 +258,10 @@ def register_with_existing_node():
         # update chain and the peers
         chain_dump = response.json()['chain']
         blockchain = create_chain_from_dump(chain_dump)
+
         peers.update(response.json()['peers'])
+
+        print("Peers Content: " + " ".join(peers))
         return "Registration successful", 200
     else:
         # if something goes wrong, pass it on to the API response
@@ -296,7 +324,7 @@ def consensus():
     current_len = len(blockchain.chain)
 
     for node in peers:
-        response = requests.get('{}chain'.format(node))
+        response = requests.get("http://" + node + "/chain")
         length = response.json()['length']
         chain = response.json()['chain']
         if length > current_len and blockchain.check_chain_validity(chain):
@@ -316,12 +344,18 @@ def announce_new_block(block):
     Other blocks can simply verify the proof of work and add it to their
     respective chains.
     """
+    import socket
+    hostname = socket.gethostname()
+    local_ip = socket.gethostbyname(hostname)
+    myIP = local_ip + ":8000"
+
     for peer in peers:
-        url = "{}add_block".format(peer)
-        headers = {'Content-Type': "application/json"}
-        requests.post(url,
-                      data=json.dumps(block.__dict__, sort_keys=True),
-                      headers=headers)
+        if peer is not myIP:
+            url = "http://{}/add_block".format(peer)
+            headers = {'Content-Type': "application/json"}
+            requests.post(url,
+                          data=json.dumps(block.__dict__, sort_keys=True),
+                          headers=headers)
 
 # Uncomment this line if you want to specify the port number in the code
 #app.run(debug=True, port=8000)

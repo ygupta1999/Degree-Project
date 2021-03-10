@@ -15,13 +15,17 @@
 
 	<br>
 
-	<a href="{{node_address}}/mine" target="_blank"><button>Request to mine</button></a>
+	<a href="/mine" target="_blank"><button>Request to mine</button></a>
 	<a href="/"><button>Resync</button></a>
+	<form action = "/test1", id="register_node" method="post">
+		<input type="text" name="node_address" placeholder="127.0.0.1:8001">
+		<input type="submit" value="Add Peer">
+	</form>
 
 	<div style="margin: 20px;">
 
     {% for post in posts %}
-    <div class="post_box">
+    	<div class="post_box">
 	   <div class="post_box-header">
 	      <div class="post_box-options"><button class="option-btn">Reply</button></div>
 	      <div style="background: rgb(0, 97, 146) none repeat scroll 0% 0%; box-shadow: rgb(0, 97, 146) 0px 0px 0px 2px;" class="post_box-avatar">{{post.author[0]}}</div>
@@ -32,6 +36,14 @@
 	      <div class="post_box-body">
 	         <p>{{post.content}}</p>
 	      </div>
+	   </div>
+	</div>
+
+  	<div class="peer_box">
+	   <div class="peer_box-header">
+	      <div class="peer_box-options"><button class="option-btn">Reply</button></div>
+	      <div style="background: rgb(0, 97, 146) none repeat scroll 0% 0%; box-shadow: rgb(0, 97, 146) 0px 0px 0px 2px;" class="peer_box-avatar"></div>
+	      <div class="address-header">{{peer}}</div>
 	   </div>
 	</div>
 	{% endfor %}

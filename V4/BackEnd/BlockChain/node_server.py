@@ -168,7 +168,7 @@ peers.add(myIP)
 @app.route('/new_transaction', methods=['POST'])
 def new_transaction():
     tx_data = request.get_json()
-    required_fields = ["author", "content"]
+    required_fields = ["author", "buyer", "seller", "quantity"]
 
     for field in required_fields:
         if not tx_data.get(field):

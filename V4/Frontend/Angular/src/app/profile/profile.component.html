@@ -1,0 +1,8 @@
+
+<!-- Basic Profile Info  -->
+<mat-list role="list">
+    <mat-list-item role="listitem" class="center" lass="text" *ngFor="let name of Users | async" >Name: {{name.name}}</mat-list-item>
+    <mat-list-item role="listitem" class="center" lass="text" *ngFor="let name of Users | async" >DOB: {{name.DOB}}</mat-list-item>
+    <mat-list-item role="listitem" class="center" lass="text" *ngFor="let name of Users | async" >Address: {{name.address}}</mat-list-item>
+    <mat-list-item role="listitem" class="center" lass="text" *ngFor="let name of Users | async" >Email: {{name.email}}</mat-list-item>
+</mat-list>

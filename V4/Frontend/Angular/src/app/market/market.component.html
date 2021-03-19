@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+
+<head>
+<meta charset="utf-8">
+</head>
+
+<!-- Basick examples of reading from firebase-->
+<p>Todays date is: {{myDate | date:'shortDate'}} </p>
+<span class="example-spacer" *ngFor="let name of Users | async">Your expected prodiction today is {{name.prod}} kWh</span>
+<p></p>
+<span class="example-spacer" *ngFor="let name of Users | async">Your expected prodiction today is {{name.cons}} kWh</span>
+<p></p>
+<span class="example-spacer" *ngFor="let name of Users | async">Your expected surplus today is {{name.prod - name.cons}} kWh</span>
+<p></p>
+
+
+<!-- Basic read from the server-->
+<button (click)="loadChain()">Load Chain</button>
+<div *ngFor="let chain of Chain">
+      {{chain | json}}
+</div>
+
+<!-- Basic post to the server-->
+<button (click)="newTransaction()">Post Chain</button>

@@ -13,7 +13,36 @@
 <p></p>
 <span class="example-spacer" *ngFor="let name of Users | async">Your expected surplus today is {{name.prod - name.cons}} kWh</span>
 <p></p>
+<p></p>
+<span class="example-spacer" *ngFor="let name of Users | async">Wallet: {{name.wallet}} </span>
+<p></p>
 
+<!-- Marketplace table -->
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+      <!-- Seller Column -->
+      <ng-container matColumnDef="user_name">
+        <th mat-header-cell *matHeaderCellDef> Seller </th>
+        <td mat-cell *matCellDef="let element"> {{element.user_name}} </td>
+      </ng-container>
+    
+      <!-- Unit Column -->
+      <!-- <ng-container matColumnDef="Amount">
+        <th mat-header-cell *matHeaderCellDef> Unit per kWh </th>
+        <td mat-cell *matCellDef="let element"> {{element.Amount}} </td>
+      </ng-container> -->
+    
+      <!-- Cost Column -->
+      <ng-container matColumnDef="Energy">
+        <th mat-header-cell *matHeaderCellDef> Energy Units </th>
+        <td mat-cell *matCellDef="let element"> {{element.Energy}}
+              <button mat-button (click)="buyEnergy()" [disabled]="buttonTest === ''">Buy</button></td>
+      </ng-container>
+    
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  
 
 <!-- Basic read from the server-->
 <button (click)="loadChain()">Load Chain</button>
@@ -23,3 +52,5 @@
 
 <!-- Basic post to the server-->
 <button (click)="newTransaction()">Post Chain</button>
+
+

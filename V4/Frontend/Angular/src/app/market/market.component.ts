@@ -19,12 +19,13 @@ import { TestBed } from '@angular/core/testing';
 
 //New rest stuff
 import { RestApiService } from "../shared/rest-api.service";
+import { snapshotChanges } from '@angular/fire/database';
 
 
 //Interfaces for Objects
 export interface Postings {
   user_name: string;
-  Amount: number;
+  //Amount: number;
   Energy: number;
 }
 
@@ -55,14 +56,17 @@ export class MarketComponent implements OnInit {
   
   //Firestore data reading/writing
   private itemCollection: AngularFirestoreCollection<Postings>;
-  items: Observable<Postings[]>;
+  items: Observable<Postings[]> | undefined;
   Users: Observable<any[]>;
   
   //for http
   data: Observable<test[]> | undefined;
+  number: test | undefined;
+  walletValue: any | undefined;
+  
+  //TESTING
+  //buttonTest = '1';
   //dataTest:Observable<any[]>;
-
-
 
 
   //STABLE
@@ -90,11 +94,17 @@ export class MarketComponent implements OnInit {
       this.Users = firestore.collection('Users').valueChanges();
       this.itemCollection = this.firestore.collection('Postings');
       this.items = this.itemCollection.valueChanges();
-
       
     }
 
     //Functions for MarketComponent
+
+    //Gets values in current users wallet
+    checkWallet(){
+
+      this.walletValue = this.firestore.collection("Users").get()
+      
+    }
     
     //TESTING
     addItem(item: Postings) {
@@ -102,14 +112,12 @@ export class MarketComponent implements OnInit {
     }
 
     //TESTING
-    updatePostings(){}
-
-    //TESTING
     delPosting(){
       this.firestore.collection("Postings").doc("Marko").delete();
     }
 
     //TESTING
+    //Writes to Firestore but disappers instanly
     addPosting(){
       var markoUpdate = this.firestore.collection("Postings").doc("Marco")
       markoUpdate.set({
@@ -119,16 +127,30 @@ export class MarketComponent implements OnInit {
       });
     }
 
+    //This is initiates a buy
+    buyEnergy(){
+      //let test;
+      //var query = this.firestore.collection("Wallet").doc("Marko").snapshotChanges
+      //markoUpdate.get().then(() => )
+
+      // Get seller ID, units, and buyer into data object
+
+
+      //Submit to chain
+    }
+       
+
+
+
     //TESTING
-    displayedColumns = ['user_name', 'Amount',  'Energy'];
+    displayedColumns = ['user_name',  'Energy'];
     dataSource: Observable<Postings[]> | undefined;
     dataDisplay: Observable<test[]> | undefined;
     
     //When the compnent loads, these functions run
     async ngOnInit(){
       this.dataSource = this.items;
-      this.dataDisplay = this.http.get<test[]>('127.0.0.1:8000/chain');
-      //this.loadChain();
+
     }
   
   //HOLF FUCK IT WORKS

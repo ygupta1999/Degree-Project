@@ -9,6 +9,7 @@ export interface item {
 // Make user struct
 
 export interface Users {
+    uid: string;
     name: string;
     DOB: string;
     address: string;

@@ -8,7 +8,9 @@ import { Observable } from 'rxjs';
 import { ApiService } from '../services/api.service'; 
 // from https://blog.logrocket.com/creating-a-crud-firebase-documents-in-angular/
 import { AngularFirestore } from "@angular/fire/firestore";
+import { AngularFireAuth } from '@angular/fire/auth';
 import { element } from 'protractor';
+import { Users } from '../services/user.model';
 
 
 
@@ -29,6 +31,9 @@ export class HomeComponent implements OnInit {
   public Wallet:boolean = false;
   public History:boolean = false;
   public Market:boolean = false;
+
+  //UID accessing
+  public uid: string | undefined;
  
   
   //Logic for handeling event of a logout
@@ -36,21 +41,33 @@ export class HomeComponent implements OnInit {
 
     //For reading firestore data
     //Each "collection" needs its own observable!!!!
-    Users: Observable<any[]>;
+    Users: Observable<Users[]>;
+    
 
     //Initializes firebase and all its services
     constructor(
       public firebaseService : FirebaseService,
       private api : ApiService, 
-      firestore : AngularFirestore ) {
+      public firestore : AngularFirestore,
+      public auth: AngularFireAuth ) {
       
         //Firestore reading logic
-        this.Users = firestore.collection('Users').valueChanges();
-  
+        this.Users = firestore.collection<Users>('Users').valueChanges();
+        auth.onAuthStateChanged((user) => {
+          if(user){
+            this.uid = user.uid
+          }
+
+        })
+        
       }
 
+      
   //On init, do stuff in there
   ngOnInit(): void {
+    //this.uid = this.auth.currentUser
+
+    //console.log(uid)
 
   }
 

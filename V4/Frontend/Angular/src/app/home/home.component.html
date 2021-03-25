@@ -18,7 +18,7 @@
 
   <!-- Ttile based on logged in placeholder user  -->
   <span></span>
-  <span class="example-spacer" *ngFor="let name of Users | async">{{name.name}}</span>
+  <span class="example-spacer" *ngFor="let name of Users | async">{{name.uid}}</span>
 <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
   <mat-icon>menu</mat-icon>
   
@@ -55,6 +55,9 @@
 <div id="market" *ngIf="Market">
   <app-market></app-market>
 </div>
+
+<span class="example-spacer" *ngFor="let name of user | async">UID: {{uid}} kWh</span>
+
 
 <!-- Templete for reading from Firebase
 <li class="text" *ngFor="let name of Users | async">

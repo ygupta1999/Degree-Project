@@ -2,12 +2,13 @@ from hashlib import sha256
 import json
 import time
 
-from flask import Flask, request, jsonify, make_response;
+from flask import Flask, request, jsonify, make_response
 import requests
 
 #MARKO CHANGES
 from flask_cors import CORS
 
+portNumber = 8008
 
 class Block:
     def __init__(self, index, transactions, timestamp, previous_hash, nonce=0):
@@ -145,7 +146,6 @@ class Blockchain:
 app = Flask(__name__)
 CORS(app)
 
-
 # the node's copy of blockchain
 blockchain = Blockchain()
 blockchain.create_genesis_block()
@@ -153,31 +153,20 @@ blockchain.create_genesis_block()
 # the address to other participating members of the network
 peers = set()
 
-import socket
-hostname = socket.gethostname()
-local_ip = socket.gethostbyname(hostname)
-myIP = str(local_ip + ":8008")
-
-print(myIP)
-
-peers.add(myIP)
-
 
 # endpoint to submit a new transaction. This will be used by
 # our application to add new data (posts) to the blockchain
 @app.route('/new_transaction', methods=['POST'])
 def new_transaction():
     tx_data = request.get_json()
-    required_fields = ["author", "content"]
+    required_fields = ["author", "buyer", "seller", "quantity"]
 
     for field in required_fields:
         if not tx_data.get(field):
             return "Invalid transaction data", 404
 
     tx_data["timestamp"] = time.time()
-
     blockchain.add_new_transaction(tx_data)
-
     return (mine_unconfirmed_transactions())
 
 
@@ -269,7 +258,7 @@ def register_with_existing_node():
     import socket
     hostname = socket.gethostname()
     local_ip = socket.gethostbyname(hostname)
-    data = {"node_address": local_ip + ":8008"}
+    data = {"node_address": local_ip + ":" + str(portNumber)}
     headers = {'Content-Type': "application/json"}
 
     # Make a request to register with remote node and obtain information
@@ -371,7 +360,7 @@ def announce_new_block(block):
     import socket
     hostname = socket.gethostname()
     local_ip = socket.gethostbyname(hostname)
-    myIP = local_ip + ":8008"
+    myIP = local_ip + ":" + str(portNumber)
 
     for peer in peers:
         if peer is not myIP:
@@ -381,5 +370,21 @@ def announce_new_block(block):
                           data=json.dumps(block.__dict__, sort_keys=True),
                           headers=headers)
 
+
+
+
+import socket
+
 # Uncomment this line if you want to specify the port number in the code
-app.run(debug=True, port=8008)
+print("Port to run node on: ")
+portNumber = input()
+
+hostname = socket.gethostname()
+local_ip = socket.gethostbyname(hostname)
+myIP = str(local_ip + ":" + str(portNumber))
+
+print(myIP)
+
+peers.add(myIP)
+
+app.run(debug=True, port=portNumber)

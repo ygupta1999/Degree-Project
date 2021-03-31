@@ -8,6 +8,8 @@ import requests
 #MARKO CHANGES
 from flask_cors import CORS
 
+portNumber = 8008
+
 class Block:
     def __init__(self, index, transactions, timestamp, previous_hash, nonce=0):
         self.index = index
@@ -144,23 +146,9 @@ class Blockchain:
 app = Flask(__name__)
 CORS(app)
 
-
 # the node's copy of blockchain
 blockchain = Blockchain()
 blockchain.create_genesis_block()
-
-# the address to other participating members of the network
-peers = set()
-
-import socket
-hostname = socket.gethostname()
-local_ip = socket.gethostbyname(hostname)
-myIP = str(local_ip + ":8003")
-
-print(myIP)
-
-peers.add(myIP)
-
 
 # endpoint to submit a new transaction. This will be used by
 # our application to add new data (posts) to the blockchain
@@ -266,7 +254,7 @@ def register_with_existing_node():
     import socket
     hostname = socket.gethostname()
     local_ip = socket.gethostbyname(hostname)
-    data = {"node_address": local_ip + ":8003"}
+    data = {"node_address": local_ip + ":" + str(portNumber)}
     headers = {'Content-Type': "application/json"}
 
     # Make a request to register with remote node and obtain information
@@ -368,7 +356,7 @@ def announce_new_block(block):
     import socket
     hostname = socket.gethostname()
     local_ip = socket.gethostbyname(hostname)
-    myIP = local_ip + ":8003"
+    myIP = local_ip + ":" + str(portNumber)
 
     for peer in peers:
         if peer is not myIP:
@@ -378,5 +366,23 @@ def announce_new_block(block):
                           data=json.dumps(block.__dict__, sort_keys=True),
                           headers=headers)
 
+
+
+# the address to other participating members of the network
+peers = set()
+
+import socket
+
 # Uncomment this line if you want to specify the port number in the code
-app.run(debug=True, port=8003)
+print("Port to run node on: ")
+portNumber = input()
+
+hostname = socket.gethostname()
+local_ip = socket.gethostbyname(hostname)
+myIP = str(local_ip + ":" + str(portNumber))
+
+print(myIP)
+
+peers.add(myIP)
+
+app.run(debug=True, port=portNumber)

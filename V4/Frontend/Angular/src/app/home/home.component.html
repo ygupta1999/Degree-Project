@@ -14,16 +14,18 @@
 <!-- End of CSS Style  -->
 
 <!-- Navigation Toolbar  -->
-<mat-toolbar>
+<mat-toolbar style="background-color:DodgerBlue;" [ngClass]="{'dark-theme-mode':isDarkTheme}">
 
   <!-- Ttile based on logged in placeholder user  -->
-  <span></span>
-  <span class="example-spacer" *ngFor="let name of Users | async">{{name.uid}}</span>
+  <span style="color:gold;">HELIUS</span>
+  
+  <!-- Fix getting Name for the title of the Nav Bar -->
+  <!-- <span *ngIf="let name of currentUser | async">{{name.email}}</span> -->
 <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
   <mat-icon>menu</mat-icon>
   
 
-</button><mat-menu #menu="matMenu">
+</button><mat-menu #menu="matMenu" [ngClass]="{'dark-theme-mode':isDarkTheme}">
   <button mat-menu-item (click)="showHome()" class="btn home">Home</button>
   <button mat-menu-item (click)="showProfile()" class="btn profile">Profile</button>
   <button mat-menu-item (click)="showWallet()" class="btn wallet">Wallet</button>
@@ -32,6 +34,8 @@
   <button mat-menu-item (click)="logout()">Logout</button>
   
 </mat-menu>
+<span style="flex:auto"></span>
+<mat-slide-toggle style="color:gold;">Dark Theme</mat-slide-toggle>
 </mat-toolbar>
  <!-- End of Navigation Toolbar  -->
 
@@ -41,7 +45,7 @@
 </div>
 
 <div id="profile" *ngIf="Profile">
-  <app-profile></app-profile>
+  <app-profile ></app-profile>
 </div>
 
 <div id="wallet" *ngIf="Wallet">
@@ -56,7 +60,8 @@
   <app-market></app-market>
 </div>
 
-<span class="example-spacer" *ngFor="let name of Users | async">UID: {{uid}} kWh</span>
+<!-- For Debugging -->
+<!-- <span class="example-spacer" *ngFor="let name of Users | async">UID: {{uid}} kWh</span> -->
 
 
 <!-- Templete for reading from Firebase

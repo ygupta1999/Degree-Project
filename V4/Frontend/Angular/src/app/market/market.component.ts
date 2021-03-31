@@ -21,11 +21,14 @@ import {MDCDataTable} from '@material/data-table';
 import { RestApiService } from "../shared/rest-api.service";
 import { snapshotChanges } from '@angular/fire/database';
 
+//Theming
+import {OverlayContainer} from '@angular/cdk/overlay';
+
+
 
 //Interfaces for Objects
 export interface Postings {
   user_name: string;
-  //Amount: number;
   Energy: number;
 }
 
@@ -34,6 +37,14 @@ export interface test {
   chain: string;
   peers: string;
 }
+
+export interface transaction {
+  author: String;
+  buyer:  String;
+  seller: String;
+  quantity: number;
+}
+
 
 
 @Component({
@@ -58,29 +69,41 @@ export class MarketComponent implements OnInit {
   items: Observable<Postings[]> | undefined;
   Users: Observable<any[]>;
   
-  //for http
+  //for HTTP stuff
   data: Observable<test[]> | undefined;
   number: test | undefined;
   walletValue: any | undefined;
   
   //TESTING
   //buttonTest = '1';
-  //dataTest:Observable<any[]>;
   postings: Postings[] | undefined;
 
   //STABLE
   //Basic chain object
   Chain: any = [];
   
-  //URL Links
-  readonly ROOT_URL = "https://jsonplaceholder.typicode.com"
-  readonly SERVER_URL = "http://127.0.0.1:8000"
 
-  //Basic date
-  myDate = Date.now();
+  displayedColumns = ['user_name',  'Energy'];
+  dataSource: Observable<Postings[]> | any;
+  dataDisplay: Observable<test[]> | undefined;
 
   //Testing production
   Production: any = [];
+  
+  /////////////////////////START DEVELOPMENT AND TESTING //////////////////////////////////////////
+  
+  //temp user
+  currentUser: String = "Marko";
+  //Basic date
+  myDate = Date.now();
+  //URL Links
+  readonly ROOT_URL = "https://jsonplaceholder.typicode.com"
+  readonly SERVER_URL = "http://127.0.0.1:8000"
+  //dataTest:Observable<any[]>;
+
+    /////////////////////////END DEVELOPMENT AND TESTING //////////////////////////////////////////
+
+
 
   //Initializes APIs for use throughout Helius
   constructor(
@@ -88,13 +111,16 @@ export class MarketComponent implements OnInit {
     private api : ApiService, 
     private firestore : AngularFirestore,
     private http: HttpClient,
-    public restApi: RestApiService
+    public restApi: RestApiService,
+    overlayContainer: OverlayContainer
       ) {
     
       //Firestore reading logic
       this.Users = firestore.collection('Users').valueChanges();
       this.itemCollection = this.firestore.collection('Postings');
       this.items = this.itemCollection.valueChanges();
+
+      //overlayContainer.getContainerElement().classList.add('dark-theme-mode');
       //this.items = this.itemCollection.valueChanges()._subscribe( data => {
 
     }
@@ -110,47 +136,40 @@ export class MarketComponent implements OnInit {
       this.itemCollection.add(item);
     }
 
+    //TODO add parameters to function to specifly deletes
     delPosting(){
       this.firestore.collection("Postings").doc("Marko").delete();
     }
 
-    //TESTING
-    //Writes to Firestore but disappers instanly
-    addPosting(){
-      var markoUpdate = this.firestore.collection("Postings").doc("Marco")
-      markoUpdate.set({
-        user_name: "suck it",
-        Energy: 345,
-        Amount: 777
-      });
-    }
 
-    async getPostings(){
-      // var data = this.firestore.collection("Postings")
-      // data.get().then(())
-      // this.postings = this.firestore.collection("Postings").get()
-      // const snapshot = await this.firestore.collection("Postings").get()
-      // snapshot.
-      // return snapshot.docs.map
-    }
-
-    //This is initiates a buy
+    //Called when a user selects "Buy" in posting
     buyEnergy(){
-      //let test;
-      //var query = this.firestore.collection("Wallet").doc("Marko").snapshotChanges
-      //markoUpdate.get().then(() => )
-      // Get seller ID, units, and buyer into data object
-      //Submit to chain
+
+    // Get "author", "buyer", "seller", "quantity"
+    let transaction = {
+        author: "Marko",
+        buyer:  "Marko",
+        seller: "Yash",
+        quantity: 420,
+      }
+
+      //Diable buy button for 3 seconds
+
+      //send data to chain for processing  
+      this.restApi.postChain(transaction);
+
+      //check if transaction was good
+
+      //Delete Posting
+      this.delPosting()
     }
        
-    //TESTING
-    displayedColumns = ['user_name',  'Energy'];
-    dataSource: Observable<Postings[]> | undefined;
-    dataDisplay: Observable<test[]> | undefined;
-    
+
     //When the compnent loads, these functions run
     async ngOnInit(){
       this.dataSource = this.items;
+      
+      //Pulling Postings from firbase "Postings"
       this.firebaseService.getPostings().subscribe(data => {
         this.postings = data.map(e => {
           return {
@@ -160,12 +179,25 @@ export class MarketComponent implements OnInit {
         })
       })
     }
-  
+
+
+
+  /////////////////////////FOR DEVELOPMENT AND TESTING //////////////////////////////////////////
+
   //Loads the entire chain
   loadChain() {
     return this.restApi.getChain().subscribe((data: {}) => {
       this.Chain.push(data)
     })};
+  
+    //Adds a placeholder posting for
+    addPosting(){
+      var markoUpdate = this.firestore.collection("Postings").doc("Marko")
+      markoUpdate.set({
+        user_name: "Marko",
+        Energy: 345,
+      });
+    }
 
     //FOR DEBUGGING ONLY
   // loadProduction() {
@@ -184,10 +216,10 @@ export class MarketComponent implements OnInit {
 
   //Sends dummy data to chain
   newTransaction(){
-    this.restApi.postChain();
+    //this.restApi.postChain();
   }
 
-
+  /////////////////////////END DEVELOPMENT AND TESTING //////////////////////////////////////////
 
 
 };

@@ -21,8 +21,6 @@ import { FirebaseService } from './services/firebase.service';
 //From https://stackoverflow.com/questions/52523258/angularfire2-cant-find-module-firebase-app/55237532
 //import { AngularFireAuth } from '@angular/fire/auth';
 
-
-
 //Added fro htttp connections connection
 import { HttpClientModule } from '@angular/common/http'
 
@@ -47,6 +45,10 @@ import {MatTableModule} from '@angular/material/table';
 
 //Fireatore stuff
 import { AngularFirestoreCollection } from '@angular/fire/firestore';
+
+//Theme stuff
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+
 
 
 // Forms module
@@ -79,7 +81,7 @@ import { AngularFirestoreCollection } from '@angular/fire/firestore';
     MatListModule,
     MatGridListModule,
     MatTableModule,
-
+    MatSlideToggleModule,
 
     //Firebase setup
     AngularFireModule.initializeApp({
@@ -91,7 +93,6 @@ import { AngularFirestoreCollection } from '@angular/fire/firestore';
       appId: "1:475929370500:web:cf04f39d3a9d487d9d07d1",
       measurementId: "G-SWCJ32CMDT"
     }),
-
     AngularFireAuthModule,
     AngularFireDatabaseModule,
 

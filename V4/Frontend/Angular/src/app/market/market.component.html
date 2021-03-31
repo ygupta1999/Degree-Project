@@ -1,61 +1,82 @@
 <!doctype html>
-<html>
+<html color="primary">
 
 <head>
 <meta charset="utf-8">
 </head>
 
-<!-- Basick examples of reading from firebase-->
-<p>Todays date is: {{myDate | date:'shortDate'}} </p>
-<span class="example-spacer" *ngFor="let name of Users | async">Your expected prodiction today is {{name.prod}} kWh</span>
-<p></p>
-<span class="example-spacer" *ngFor="let name of Users | async">Your expected prodiction today is {{name.cons}} kWh</span>
-<p></p>
-<span class="example-spacer" *ngFor="let name of Users | async">Your expected surplus today is {{name.prod - name.cons}} kWh</span>
-<p></p>
-<p></p>
-<span class="example-spacer" *ngFor="let name of Users | async">Wallet: {{name.wallet}} </span>
-<p></p>
 
-  <table>
-    <thead>
-      <th>Number</th>
-      <th>Created At</th>
-      <th>Expire At</th>
-      <th>Amount</th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let posting of postings">
-        <td>{{posting.user_name}}</td>
-        <td>{{posting.Energy}}</td>
-        <td>
-            <button>Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+
+<!-- Table that stores energy postings -->
+  <!-- <table> -->
+    <!-- <thead> -->
+      <!-- <th>Seller</th> -->
+      <!-- <th>Quantity</th> -->
+    <!-- </thead> -->
+    <!-- <tbody> -->
+      <!-- <tr *ngFor="let posting of postings"> -->
+        <!-- <td>{{posting.user_name}}</td> -->
+        <!-- <td>{{posting.Energy}}</td> -->
+        <!-- <td> -->
+            <!-- <button>Buy</button> -->
+        <!-- </td> -->
+      <!-- </tr> -->
+    <!-- </tbody> -->
+  <!-- </table> -->
+
+
+  <!-- Marketplace table -->
+<table mat-table color="primary" [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <!-- Seller Column -->
+  <ng-container matColumnDef="user_name">
+    <th mat-header-cell *matHeaderCellDef> Seller </th>
+    <td mat-cell *matCellDef="let element"> {{element.user_name}} </td>
+  </ng-container>
+
+  <!-- Cost Column -->
+  <ng-container matColumnDef="Energy">
+    <th mat-header-cell *matHeaderCellDef> Energy </th>
+    <td mat-cell *matCellDef="let element">{{element.Energy}} <button mat-raised-button color="warn" (click)="buyEnergy()" >Buy</button></td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
   
 
-<!-- Basic read from the server-->
-<button (click)="loadChain()">Load Chain</button>
+
+
+<!--   /////////////////////////START DEVELOPMENT AND TESTING ////////////////////////////////////////// -->
+
+<!-- Buttons for various testing -->
+<button mat-raised-button color="primary" (click)="addPosting()">Add Post</button>
+<button mat-raised-button color="primary" (click)="loadChain()">Load Chain</button>
+<button mat-raised-button color="primary" (click)="postProduction()">Post Production</button>
+<!-- <button mat-raised-button color="primary" (click)="newTransaction()">Post Chain</button> -->
+
+<!-- Displaying reads-->
 <div *ngFor="let chain of Chain">
-      {{chain | json}}
+  {{chain | json}}
+</div>
+<div *ngFor="let prod of Production">
+{{prod | json}}
 </div>
 
-<!-- FOR DEBUGGING -->
+
+<!-- Basic examples of reading from firebase-->
+<!-- <p>Todays date is: {{myDate | date:'shortDate'}} </p> -->
+<!-- <span class="example-spacer" *ngFor="let name of Users | async">Your expected prodiction today is {{name.prod}} kWh</span> -->
+<!-- <span class="example-spacer" *ngFor="let name of Users | async">Your expected prodiction today is {{name.cons}} kWh</span> -->
+<!-- <span class="example-spacer" *ngFor="let name of Users | async">Your expected surplus today is {{name.prod - name.cons}} kWh</span> -->
+<!-- <span class="example-spacer" *ngFor="let name of Users | async">Wallet: {{name.wallet}} </span> -->
+
+
 <!-- Basic read from the server-->
 <!-- <button (click)="loadProduction()">Load Production</button>
 <div *ngFor="let prod of Production">
       {{prod | json}}
 </div> -->
 
-<!-- Basic post to the server-->
-<button (click)="newTransaction()">Post Chain</button>
-
-<!-- Basic post to the server-->
-<button (click)="postProduction()">Post Production</button>
-<div *ngFor="let prod of Production">
-  {{prod | json}}
-</div>
 
 

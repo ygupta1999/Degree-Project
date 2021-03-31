@@ -5,14 +5,15 @@ export interface item {
     name: string;
 }
 
-//TODO
-// Make user struct
-
 export interface Users {
-    uid: string;
-    name: string;
+    Name: string;
     DOB: string;
-    address: string;
-    email: string;
-    wallet: number;
+    Address: string;
+    City: string;
+    Email: string
+    Panels: number;
+    Phone: string;
+    PostalCode: string;
+    Province: string;
+
 }

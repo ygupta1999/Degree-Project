@@ -5,6 +5,13 @@ import { Production } from '../shared/production';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
 
+export interface transaction {
+  author: String;
+  buyer:  String;
+  seller: String;
+  quantity: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -65,8 +72,8 @@ export class RestApiService {
     }
 
     //Posts dummy data to the chain
-    postChain() {
-      this.http.post<Chain>(this.serverURL + '/new_transaction', this.testPost)
+    postChain(object: transaction): any {
+      this.http.post<Chain>(this.serverURL + '/new_transaction', object)
       .toPromise()
       .then(data => {
         console.log(data);

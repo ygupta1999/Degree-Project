@@ -21,3 +21,7 @@ Results
 - Prod_API works
 - Chain does not work
 	- not sure where the issue is. My guess might be soemthing witht the ports and not seeing each other?
+
+The register_with API call in the block chain server is used to add the current node to part of a network.
+	Therefore pass it the address (127.0.0.1:port for example) of the EXISTNG node for them to update
+	This is intended to be called by a new node to add it to an existing network

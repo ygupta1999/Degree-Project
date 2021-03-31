@@ -43,38 +43,49 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+<br>
+<!--  /////////////////////////START DEVELOPMENT AND TESTING ////////////////////////////////////////// -->
 
-<!--   /////////////////////////START DEVELOPMENT AND TESTING ////////////////////////////////////////// -->
-
-<!-- Buttons for various testing -->
+<!-- Posting Utilities -->
+<h1>Testing Utilities</h1>
+<h2>Posting Tools</h2>
 <button mat-raised-button color="primary" (click)="addPosting()">Add Post</button>
-<!-- <button mat-raised-button color="primary" (click)="loadProduction()">Load Production data</button> -->
-<button mat-raised-button color="primary" (click)="cleanProdArray()">Clean Production Array</button>
+<br>
 
-<!-- <button mat-raised-button color="primary" (click)="newTransaction()">Post Chain</button> -->
-
-<!-- Displaying reads-->
-<h2>BlockChain Data</h2>
+<!-- Blockchain Utilities-->
+<h2>BlockChain Tools</h2>
 <button mat-raised-button color="primary" (click)="loadChain()">Load Chain</button>
-<div *ngFor="let chain of Chain">
-  {{chain | json}}
-</div>
-
-<h2>Solar Production Data</h2>
-<button mat-raised-button color="primary" (click)="postProduction()">Post Production</button>
-<div *ngFor="let prod of Production">
-    {{prod | json}}
-</div>
-<button mat-raised-button color="primary" (click)="calcSumProductionArray()">Sum Production Array</button>
 <button mat-raised-button color="primary" (click)="connectToNetwork()">Connect to v4 Network</button>
+<br>
 
-<div >Sum of Production Array = {{ProductionArraySum[0]}}</div>
+<!-- Solar Production Utilities-->
+<h2>Solar Production Tools</h2>
+<button mat-raised-button color="primary" (click)="postProduction()">Post Production</button>
+<button mat-raised-button color="primary" (click)="calcSumProductionArray()">Sum Production Array</button>
+<button mat-raised-button color="primary" (click)="cleanProdArray()">Clean Production Array</button>
+<br>
+
+<!-- Data Viz-->
+<h2>Data Visualizations</h2>
+<div *ngFor="let chain of Chain">
+  CHAIN: {{chain | json}}
+</div>
+<div *ngFor="let prod of Production">
+  PRODUCTION: {{prod | json}}
+</div>
+
+<!-- Other Viz -->
+<h2>Testing Visualizations</h2>
+<div >Sum of Production Array = {{ProductionArraySum}}</div>
 <div >Current user = {{currentUser}}</div>
 
+
+<!-- DEPRECATED -->
+
+<!-- <button mat-raised-button color="primary" (click)="loadProduction()">Load Production data</button> -->
+<!-- <button mat-raised-button color="primary" (click)="newTransaction()">Post Chain</button> -->
 <!-- <button mat-raised-button color="primary" (click)="passUid(uid.uid)">Passit!</button> -->
-
 <!-- <div >Uid = {{uid2}}</div> -->
-
 <!-- Basic examples of reading from firebase-->
 <!-- <p>Todays date is: {{myDate | date:'shortDate'}} </p> -->
 <!-- <span class="example-spacer" *ngFor="let name of Users | async">Your expected prodiction today is {{name.prod}} kWh</span> -->
@@ -82,7 +93,4 @@
 <!-- <span class="example-spacer" *ngFor="let name of Users | async">Your expected surplus today is {{name.prod - name.cons}} kWh</span> -->
 <!-- <span class="example-spacer" *ngFor="let name of Users | async">Wallet: {{name.wallet}} </span> -->
 
-
-
-
-
+<!--  /////////////////////////END DEVELOPMENT AND TESTING ////////////////////////////////////////// -->

@@ -167,6 +167,11 @@ def gen_solar(date,address,panels,eff):
 #     df.plot()
     df = gen_hourly_data(df,date,address)
     #crop time based on sunrise and sunset
+
+    #MARKO ADD
+    # sum = 0
+    # sum = sum(df)
+    # print(sum)
     return df
 def utc_to_est(time,sunset=False):
     print(time)

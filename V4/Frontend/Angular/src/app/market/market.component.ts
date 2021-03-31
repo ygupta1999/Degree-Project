@@ -60,6 +60,7 @@ export interface transaction {
       {{ item.name }}
     </li>
   </ul>
+  <div >Sum of Production Array = {{ProductionArraySum}}</div>
   `
 })
 export class MarketComponent implements OnInit {
@@ -74,8 +75,7 @@ export class MarketComponent implements OnInit {
   number: test | undefined;
   walletValue: any | undefined;
   
-  //TESTING
-  //buttonTest = '1';
+  
   postings: Postings[] | undefined;
 
   //STABLE
@@ -87,8 +87,9 @@ export class MarketComponent implements OnInit {
   dataSource: Observable<Postings[]> | any;
   dataDisplay: Observable<test[]> | undefined;
 
-  //Testing production
+  //Production variables
   Production: any = [];
+
   
   /////////////////////////START DEVELOPMENT AND TESTING //////////////////////////////////////////
   
@@ -97,11 +98,15 @@ export class MarketComponent implements OnInit {
   //Basic date
   myDate = Date.now();
   //URL Links
-  readonly ROOT_URL = "https://jsonplaceholder.typicode.com"
-  readonly SERVER_URL = "http://127.0.0.1:8000"
+  //readonly ROOT_URL = "https://jsonplaceholder.typicode.com"
+  //readonly SERVER_URL = "http://127.0.0.1:8000"
   //dataTest:Observable<any[]>;
+  //buttonTest = '1';
+  ProductionArraySum: number[] = [];
 
-    /////////////////////////END DEVELOPMENT AND TESTING //////////////////////////////////////////
+  testBuy: String = ""
+
+  /////////////////////////END DEVELOPMENT AND TESTING //////////////////////////////////////////
 
 
 
@@ -137,20 +142,19 @@ export class MarketComponent implements OnInit {
     }
 
     //TODO add parameters to function to specifly deletes
-    delPosting(){
-      this.firestore.collection("Postings").doc("Marko").delete();
+    deletePosting(seller: string){
+      this.firestore.collection("Postings").doc(seller).delete();
     }
 
-
     //Called when a user selects "Buy" in posting
-    buyEnergy(){
+    buyEnergy(seller: string, quantity: number){
 
     // Get "author", "buyer", "seller", "quantity"
     let transaction = {
         author: "Marko",
         buyer:  "Marko",
-        seller: "Yash",
-        quantity: 420,
+        seller: seller,
+        quantity: quantity,
       }
 
       //Diable buy button for 3 seconds
@@ -161,7 +165,7 @@ export class MarketComponent implements OnInit {
       //check if transaction was good
 
       //Delete Posting
-      this.delPosting()
+      this.deletePosting(seller)
     }
        
 
@@ -197,6 +201,18 @@ export class MarketComponent implements OnInit {
         user_name: "Marko",
         Energy: 345,
       });
+
+      var shaunUpdate = this.firestore.collection("Postings").doc("Shaun")
+      shaunUpdate.set({
+        user_name: "Shaun",
+        Energy: 500,
+      });
+
+      var yashUpdate = this.firestore.collection("Postings").doc("Yash")
+      yashUpdate.set({
+        user_name: "Yash",
+        Energy: 1,
+      });
     }
 
     //FOR DEBUGGING ONLY
@@ -206,11 +222,31 @@ export class MarketComponent implements OnInit {
   //       this.Production.push(data)
   //   })};
 
+  //Calculate the sum of the production array
+  //FUCK THIS
+  calcSumProductionArray(){
+    var sum = 1;
+    let temp: any[] = [];
+
+    var i;
+    for(i in this.Production){
+      this.ProductionArraySum[0] += this.Production[i];
+      //this.ProductionArraySum += this.Production[i];
+
+    }
+  }
+
   //Sends request for solar production data
   postProduction(){
     return this.restApi.postProduction().subscribe((data: {}) => {
       this.Production.push(data)
+      //let var = data;
+      this.calcSumProductionArray();
   })};
+
+  cleanProdArray(){
+    this.Production = 0;
+  }
   //   this.Production = this.restApi.postProduction();
   // }
 

@@ -52,6 +52,10 @@ export interface transaction {
   quantity: number;
 }
 
+export interface port {
+  node_ddress: String;
+}
+
 
 
 @Component({
@@ -188,6 +192,15 @@ export class MarketComponent implements OnInit {
 
       //Delete Posting
       this.deletePosting(seller)
+    }
+
+    //Sends V5s port address to V4s node server
+    connectToNetwork(){
+      let port = {
+        node_address: 'localhost:8003',
+      }
+
+      this.restApi.connectToChain(port);
     }
 
     passUid(uid:string){

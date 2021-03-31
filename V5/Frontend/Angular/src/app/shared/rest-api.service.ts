@@ -12,6 +12,10 @@ export interface transaction {
   quantity: number;
 }
 
+export interface port {
+  node_address: String;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,6 +24,8 @@ export class RestApiService {
   //Define API urls
   serverURL = 'http://localhost:8003';
   weatherURL = 'http://localhost:8004';
+  v5URL = 'http://localhost:8003';
+  v4URL = 'http://localhost:8000';
 
   //Hardcodded testing data
   testPost = {
@@ -79,6 +85,15 @@ export class RestApiService {
         console.log(data);
       })
     }
+
+      //Connect to other networks
+      connectToChain(value: port): any {
+        this.http.post(this.v5URL + '/register_with', value)
+        .toPromise()
+        .then(data => {
+          console.log(data);
+        })
+      }
 
     // Error handling 
   handleError(error: { error: { message: string; }; status: any; message: any; }) {

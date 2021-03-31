@@ -1,0 +1,23 @@
+Helius - Multiple Nodes Test #1
+31/03/2021
+
+Notes
+- Tested V4 and V5
+- Changed ports  of V5 to test
+- to specify angualr port "ng serve --port XXXX"
+Port Configs
+V4{
+	Angular: 4401
+	NodeServer: 8000
+	Prod_API: 8002
+}
+V5{
+	Angular: 4402
+	NodeServer: 8003
+	Prod_API: 8004
+}
+Results
+- Firebase postings work
+- Prod_API works
+- Chain does not work
+	- not sure where the issue is. My guess might be soemthing witht the ports and not seeing each other?

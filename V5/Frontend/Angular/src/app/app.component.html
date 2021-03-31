@@ -1,0 +1,55 @@
+<!--This is the main HTML of the Login Page -->
+
+<!--CSS Styles for centering -->
+<style>
+  .container { 
+    height: 100px;
+    position: relative;
+  }
+  
+  .vertical-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+  
+  .center {
+  text-align: center;
+  margin: 30px;
+  }
+
+
+  </style>
+<!--end of CSS Styles for centering -->
+
+
+<!--Title of page -->
+<!--End of Title of page -->
+
+
+
+<!--Sign in component -->
+<div class="center" *ngIf="!isSignedIn">
+  <form class="example-form">
+    <mat-form-field class="example-full-width">
+      <mat-label>Email</mat-label>
+      <input matInput placeholder="Ex. Pizza" value="test@helius.com" #email>
+    </mat-form-field>
+  
+    <mat-form-field class="example-full-width">
+      <mat-label>Password</mat-label>
+      <input matInput placeholder="Ex. It makes me feel..." value="123456" #password>
+    </mat-form-field>
+    <button mat-raised-button (click)="onSignin(email.value,password.value)">Sign In</button>
+  </form>
+</div>
+<!--End of Sign in component -->
+
+<!--Logout Handler -->
+<app-home *ngIf="isSignedIn" (isLogout)="handleLogout()"></app-home>
+<!--End of Logout Handler -->
+
+
+

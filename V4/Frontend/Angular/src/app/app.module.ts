@@ -48,6 +48,7 @@ import {MatTableModule} from '@angular/material/table';
 //Fireatore stuff
 import { AngularFirestoreCollection } from '@angular/fire/firestore';
 
+
 // Forms module
 
 
@@ -59,7 +60,7 @@ import { AngularFirestoreCollection } from '@angular/fire/firestore';
     WalletComponent,
     HistoryComponent,
     MarketComponent,
-    //HttpClientModule
+    //HttpClientModule,
     
   ],
   imports: [

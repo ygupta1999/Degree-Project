@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Chain } from '../shared/chain';
+import { Production } from '../shared/production';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
 
@@ -9,15 +10,22 @@ import { retry, catchError } from 'rxjs/operators';
 })
 export class RestApiService {
   
-  // Define API
-  apiURL = 'http://localhost:8000';
+  //Define API urls
+  serverURL = 'http://localhost:8000';
+  weatherURL = 'http://localhost:8002';
 
   //Hardcodded testing data
   testPost = {
-    author: "Daddy",
-    content: "6inchs",
+    author: "Marko",
+    buyer:  "Marko",
+    seller: "Yash",
+    quantity: "420",
   }
-  
+
+  //this format works for json posts
+  testProd = {
+    author: "Yash",
+  }
 
   constructor(private http: HttpClient) { }
 
@@ -33,29 +41,36 @@ export class RestApiService {
     })
   }
   
-    // HttpClient API get() method => Fetch employees list
+    // HttpClient API get() method => Fetch chain data
     getChain(): Observable<Chain> {
-
-      //This function is able to ping the server but is not able to parse the response
-      return this.http.get<Chain>(this.apiURL + '/chain')
+      return this.http.get<Chain>(this.serverURL + '/chain')
       .pipe(
         retry(1),
         catchError(this.handleError)
       )
-
-      //return this.http.request<Chain>('GET', this.http + '/chain', {responseType:'json'});
     }
 
+    //FOR DEBUGGING
+    //Gets the solar production data in an array
+    // getProduction(): Observable<Production> {
+    //   return this.http.get<Production>(this.weatherURL + '/solar_production')
+    // }
+
+    //Sends userID to production server
+    postProduction(){
+      //we pass this a premade object from above
+      return this.http.post(this.weatherURL + '/solar_production', this.testProd)
+      //TODO
+      //Returns or displays 2 production datas
+    }
+
+    //Posts dummy data to the chain
     postChain() {
-      this.http.post<Chain>(this.apiURL + '/new_transaction', this.testPost)
+      this.http.post<Chain>(this.serverURL + '/new_transaction', this.testPost)
       .toPromise()
       .then(data => {
         console.log(data);
       })
-      //.pipe(
-      //  retry(1),
-      //  catchError(this.handleError)
-      //)
     }
 
     // Error handling 

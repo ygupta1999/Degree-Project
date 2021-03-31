@@ -10,17 +10,24 @@ from math import *
 from geopy.geocoders import Nominatim
 import requests
 from datetime import datetime
-import pandas as pd   
+import pandas as pd
+#MARKO CHANGES
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
-from flask import Flask, request, redirect, url_for, flash, jsonify
+from flask import Flask, request, redirect, url_for, flash, jsonify, make_response
 import numpy as np
 import pickle as p
 import json
 import tensorflow as tf
+#MARKO CHANGES
+from flask_cors import CORS
+
 
 app = Flask(__name__)
+CORS(app)
 
 def solar_radiation(lat,n,t,to,k,a):
     delta = 23.5*sin(radians(360*(284+n)/365))
@@ -123,11 +130,7 @@ def get_solar_power(temp,radiation,panels=1,eff=0.2):
         power.append(solar_power(radiation[i],temp[i],panels,eff))
     return power
 
-def visualize(x,y):
-    fig = plt.figure()
-    fig.set_size_inches(9.5, 5.5)
-    ax = plt.axes()
-    ax.plot(x, y)
+
 
 def gen_hourly_data(df,date,address):
     response = requests.get("https://api.sunrise-sunset.org/json?lat="+str(latitude(address)) + "&lng="+str(longitude(address))+"&date="+date)
@@ -144,7 +147,7 @@ def gen_hourly_data(df,date,address):
         else:
             final.append(0)
     power = final
-#     print(final)
+#     print(final) 
     hourly = []
     for i in range(24):
         res = sum(power[10*i:10*(i+1)])
@@ -183,19 +186,41 @@ def utc_to_est(time,sunset=False):
             hour = hour+12-5
     return hour+ minute*0.1
 
-@app.route('/solar_production', methods=['POST'])
+@app.route('/solar_production', methods=['POST','GET'])
 # @app.route("/")
 def solar_production():
-    json_ = request.json
-    # json_ = np.array(json_)
 
-    doc_ref = db.collection(u'User_Info').document(json_)
+    #####MARKO CHANGES#####
+    #https://flask.palletsprojects.com/en/1.1.x/quickstart/#http-methods
+    #flask needs to differentiate between get and post
+
+    #V1
+    # testValue = flask.request.form
+    # ##V2
+
+    # if request.method == 'POST':
+    #     return do_the_login()
+    # else:
+    #     return show_the_login_form()
+    ########################
+
+    json_ = request.get_json()
+    # json_ = np.array(json_)
+    print(json_)
+    doc_ref = db.collection(u'User_Info').document(json_["author"])
     doc = doc_ref.get()
     address = doc.to_dict()['Address']
     panels = doc.to_dict()['Panels']
     res = gen_solar("2016-6-12",address,panels,0.1)
     # res = 'Yash'
-    return jsonify(res)
+    # res = make_response(jsonify({
+    # 	"length": len(chain_data),
+    #     "chain": chain_data,
+    #     "peers": list(peers)}), 200)
+    # return res
+
+
+    return make_response(jsonify(res),200)
 
 
 if __name__ == '__main__':

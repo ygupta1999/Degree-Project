@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,10 @@ import { AngularFireAuth } from '@angular/fire/auth';
 export class FirebaseService {
 
   isLoggedIn = false;
-  constructor(public firebaseAuth: AngularFireAuth, private http: HttpClient) { }
+  constructor(public firebaseAuth: AngularFireAuth,
+     private http: HttpClient,
+     private firestore: AngularFirestore
+     ) { }
 
   //Authenticating with firebase email and login
   async signin(email : string, password : string){
@@ -31,5 +35,9 @@ export class FirebaseService {
   logout(){
     this.firebaseAuth.signOut()
     localStorage.removeItem('user')
+  }
+
+  getPostings(){
+    return this.firestore.collection('Postings').snapshotChanges();
   }
 }

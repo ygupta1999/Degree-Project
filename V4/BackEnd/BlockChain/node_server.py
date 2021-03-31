@@ -2,12 +2,11 @@ from hashlib import sha256
 import json
 import time
 
-from flask import Flask, request, jsonify, make_response;
+from flask import Flask, request, jsonify, make_response
 import requests
 
 #MARKO CHANGES
 from flask_cors import CORS
-
 
 class Block:
     def __init__(self, index, transactions, timestamp, previous_hash, nonce=0):
@@ -175,9 +174,7 @@ def new_transaction():
             return "Invalid transaction data", 404
 
     tx_data["timestamp"] = time.time()
-
     blockchain.add_new_transaction(tx_data)
-
     return (mine_unconfirmed_transactions())
 
 

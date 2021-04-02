@@ -5,38 +5,47 @@
 <meta charset="utf-8">
 </head>
 
-
-<!-- Table that stores energy postings -->
-  <!-- <table> -->
-    <!-- <thead> -->
-      <!-- <th>Seller</th> -->
-      <!-- <th>Quantity</th> -->
-    <!-- </thead> -->
-    <!-- <tbody> -->
-      <!-- <tr *ngFor="let posting of postings"> -->
-        <!-- <td>{{posting.user_name}}</td> -->
-        <!-- <td>{{posting.Energy}}</td> -->
-        <!-- <td> -->
-            <!-- <button>Buy</button> -->
-        <!-- </td> -->
-      <!-- </tr> -->
-    <!-- </tbody> -->
-  <!-- </table> -->
-
-
   <!-- Marketplace table -->
 <table mat-table color="primary" [dataSource]="dataSource" class="mat-elevation-z8">
 
   <!-- Seller Column -->
   <ng-container matColumnDef="user_name">
-    <th mat-header-cell *matHeaderCellDef> Seller </th>
-    <td mat-cell *matCellDef="let element"> {{element.user_name}} </td>
+    <th mat-header-cell *matHeaderCellDef> Post Id </th>
+    <td mat-cell *matCellDef="let element"> {{element.PostID}} </td>
   </ng-container>
 
   <!-- Cost Column -->
   <ng-container matColumnDef="Energy">
     <th mat-header-cell *matHeaderCellDef> Energy </th>
-    <td mat-cell *matCellDef="let element">{{element.Energy}} <button  mat-raised-button color="warn" (click)="buyEnergy(element.user_name, element.Energy)" >Buy</button>
+    <td mat-cell *matCellDef="let element">{{element.Energy}} 
+      <!-- <button  mat-raised-button color="warn" (click)="buyEnergy(element.user_name, element.Energy)">Bid</button> -->
+      <!-- <input matInput type="text" [(ngModel)]="value"> -->
+    </td>
+  </ng-container>
+
+  <!-- Bid Column -->
+  <ng-container matColumnDef="Bid">
+    <th mat-header-cell *matHeaderCellDef> Bid Value </th>
+    <!-- Cell Contents -->
+    <td mat-cell  *matCellDef="let element" >
+    <!-- Bid Input Section -->
+    <mat-form-field class="example-form-field" appearance="outline" >
+      <input matInput type="text" value=666 id="{{element}}" [formControl]="name">
+      <button mat-button  matSuffix mat-icon-button aria-label="Clear" >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    
+    </td>
+  </ng-container>
+
+  <!-- Bid Button Column -->
+  <ng-container matColumnDef="Bid Button">
+    <th mat-header-cell *matHeaderCellDef> Bid Button </th>
+    <!-- Cell Contents -->
+    <td mat-cell *matCellDef="let element">
+    <!-- Bid Button -->
+      <button mat-raised-button color="warn" (click)="buyEnergy(element.PostID, element.Energy, name.value)">Bid</button>
     </td>
   </ng-container>
 
@@ -44,12 +53,15 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 <br>
+
 <!--  /////////////////////////START DEVELOPMENT AND TESTING ////////////////////////////////////////// -->
 
 <!-- Posting Utilities -->
 <h1>Testing Utilities</h1>
 <h2>Posting Tools</h2>
-<button mat-raised-button color="primary" (click)="addPosting()">Add Post</button>
+<button mat-raised-button color="primary" (click)="addPosting()">Add Temp Postings</button>
+<button mat-raised-button color="primary" (click)="addUserPosting()">Add User Posting</button>
+
 <br>
 
 <!-- Blockchain Utilities-->
@@ -60,28 +72,55 @@
 
 <!-- Solar Production Utilities-->
 <h2>Solar Production Tools</h2>
-<button mat-raised-button color="primary" (click)="postProduction()">Post Production</button>
+<button mat-raised-button color="primary" (click)="postProduction()">"Post" Production</button>
 <button mat-raised-button color="primary" (click)="calcSumProductionArray()">Sum Production Array</button>
 <button mat-raised-button color="primary" (click)="cleanProdArray()">Clean Production Array</button>
 <br>
 
+<!-- Solar Production Utilities-->
+<h2>Solar Consumption Tools</h2>
+<button mat-raised-button color="primary" (click)="postConsumption()">"Post" Consumption</button>
+<br>
+
+<!-- Solar Surplus Utilities-->
+<h2>Solar Surplus Tools</h2>
+<button mat-raised-button color="primary" (click)="postSurplus()">"Post" Surplus</button>
+<br>
+
+<!-- Bid Utilities -->
+<h2>Bid Tools</h2>
+<label>
+  Name:
+  <input type="text" [formControl]="name">
+</label>
+<p>
+  Value: {{ name.value }}
+</p>
+
 <!-- Data Viz-->
 <h2>Data Visualizations</h2>
+<br>
 <div *ngFor="let chain of Chain">
   CHAIN: {{chain | json}}
 </div>
+<br>
 <div *ngFor="let prod of Production">
   PRODUCTION: {{prod | json}}
+</div>
+<br>
+<div *ngFor="let cons of Consumption">
+  CONSUMPTION: {{cons | json}}
 </div>
 
 <!-- Other Viz -->
 <h2>Testing Visualizations</h2>
 <div >Sum of Production Array = {{ProductionArraySum}}</div>
-<div >Current user = {{currentUser}}</div>
+<div >Current user = {{testval}}</div>
+
+
 
 
 <!-- DEPRECATED -->
-
 <!-- <button mat-raised-button color="primary" (click)="loadProduction()">Load Production data</button> -->
 <!-- <button mat-raised-button color="primary" (click)="newTransaction()">Post Chain</button> -->
 <!-- <button mat-raised-button color="primary" (click)="passUid(uid.uid)">Passit!</button> -->

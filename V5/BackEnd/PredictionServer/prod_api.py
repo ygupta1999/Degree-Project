@@ -9,22 +9,14 @@ from firebase_admin import firestore
 from math import *
 from geopy.geocoders import Nominatim
 import requests
+import pandas as pd   
+from datetime import date, timedelta
 from datetime import datetime
-import pandas as pd
+from keras import backend as K
+import time
+
 #MARKO CHANGES
 from flask_cors import CORS
-
-app = Flask(__name__)
-CORS(app)
-
-from flask import Flask, request, redirect, url_for, flash, jsonify, make_response
-import numpy as np
-import pickle as p
-import json
-import tensorflow as tf
-#MARKO CHANGES
-from flask_cors import CORS
-
 
 app = Flask(__name__)
 CORS(app)
@@ -130,7 +122,11 @@ def get_solar_power(temp,radiation,panels=1,eff=0.2):
         power.append(solar_power(radiation[i],temp[i],panels,eff))
     return power
 
-
+def visualize(x,y):
+    fig = plt.figure()
+    fig.set_size_inches(9.5, 5.5)
+    ax = plt.axes()
+    ax.plot(x, y)
 
 def gen_hourly_data(df,date,address):
     response = requests.get("https://api.sunrise-sunset.org/json?lat="+str(latitude(address)) + "&lng="+str(longitude(address))+"&date="+date)
@@ -147,7 +143,7 @@ def gen_hourly_data(df,date,address):
         else:
             final.append(0)
     power = final
-#     print(final) 
+#     print(final)
     hourly = []
     for i in range(24):
         res = sum(power[10*i:10*(i+1)])
@@ -167,11 +163,6 @@ def gen_solar(date,address,panels,eff):
 #     df.plot()
     df = gen_hourly_data(df,date,address)
     #crop time based on sunrise and sunset
-
-    #MARKO ADD
-    # sum = 0
-    # sum = sum(df)
-    # print(sum)
     return df
 def utc_to_est(time,sunset=False):
     print(time)
@@ -191,42 +182,134 @@ def utc_to_est(time,sunset=False):
             hour = hour+12-5
     return hour+ minute*0.1
 
-@app.route('/solar_production', methods=['POST','GET'])
+@app.route('/solar_production', methods=['POST'])
 # @app.route("/")
 def solar_production():
+    json_ = request.json
+    json_= json_["author"]
+    doc_ref = db.collection(u'User_Info')
+    query = doc_ref.where(u'uid', u'==', json_)
 
-    #####MARKO CHANGES#####
-    #https://flask.palletsprojects.com/en/1.1.x/quickstart/#http-methods
-    #flask needs to differentiate between get and post
-
-    #V1
-    # testValue = flask.request.form
-    # ##V2
-
-    # if request.method == 'POST':
-    #     return do_the_login()
-    # else:
-    #     return show_the_login_form()
-    ########################
-
-    json_ = request.get_json()
-    # json_ = np.array(json_)
-    print(json_)
-    doc_ref = db.collection(u'User_Info').document(json_["author"])
-    doc = doc_ref.get()
-    address = doc.to_dict()['Address']
-    panels = doc.to_dict()['Panels']
+    for document in query.stream():
+        info = document.to_dict()
+    
+    address = info['Address']
+    panels = info['Panels']
     res = gen_solar("2016-6-12",address,panels,0.1)
-    # res = 'Yash'
-    # res = make_response(jsonify({
-    # 	"length": len(chain_data),
-    #     "chain": chain_data,
-    #     "peers": list(peers)}), 200)
-    # return res
+    return jsonify(res)
 
 
-    return make_response(jsonify(res),200)
+@app.route('/solar_consumption', methods=['POST'])
+# @app.route("/")
+def solar_consumption():
 
+    json_ = request.json
+    json_ = json_["author"]
+    doc_ref = db.collection(u'User_Info')
+    query = doc_ref.where(u'uid', u'==', json_)
+
+    for document in query.stream():
+        info = document.to_dict()
+        
+    model_id = info['model']
+    
+    data = pd.read_csv('Data Clean.csv')
+    data['Timestamp'] = pd.to_datetime(data['Timestamp'],infer_datetime_format=True)
+    df = data.set_index(['Timestamp'])
+    d = '2016-2-12'
+    today = datetime.strptime(d, '%Y-%m-%d')
+    yesterday = today - timedelta(days = 1)
+    l = []
+    x = np.array(df.loc[str(yesterday).split(' ')[0]])
+#     x = x.reshape(x.shape[0], x.shape[1], 1)
+    l.append(x)
+    l = np.array(l)
+    print(model_id)
+    model = tf.keras.models.load_model('lstm.h5')
+    pred = model.predict(l)
+    temp = []
+    for i in pred[0]:
+        temp.append(i[0])
+    temp = np.array(temp)
+    return jsonify(temp.tolist())
+
+@app.route('/surplus', methods=['POST'])
+# # @app.route("/")
+def surplus():
+
+    json_ = request.json
+    doc_ref = db.collection(u'User_Info')
+    query = doc_ref.where(u'uid', u'==', json_)
+
+    for document in query.stream():
+        info = document.to_dict()
+        
+    address = info['Address']
+    panels = info['Panels']
+    prod = gen_solar("2016-6-12",address,panels,0.1)
+    
+    model_id = info['model']
+    data = pd.read_csv('Data Clean.csv')
+    data['Timestamp'] = pd.to_datetime(data['Timestamp'],infer_datetime_format=True)
+    df = data.set_index(['Timestamp'])
+    d = '2016-2-12'
+    today = datetime.strptime(d, '%Y-%m-%d')
+    yesterday = today - timedelta(days = 1)
+    l = []
+    x = np.array(df.loc[str(yesterday).split(' ')[0]])
+#     x = x.reshape(x.shape[0], x.shape[1], 1)
+    l.append(x)
+    l = np.array(l)
+    print(model_id)
+    model = tf.keras.models.load_model('lstm.h5')
+    pred = model.predict(l)
+    cons = []
+    for i in pred[0]:
+        cons.append(i[0])
+    cons = np.array(cons)
+    
+    res = sum(prod)-sum(cons)
+    
+    return jsonify(res)
+
+@app.route('/validate_bid', methods=['POST', 'GET'])
+# # @app.route("/")
+def validate_bid():
+    print("YOO1111O")
+
+    json_ = request.json
+    post_id = json_['Post_Id']
+    uid = json_['uid']
+    bid = json_['Amount']
+
+    print(bid)
+    print("YOOOO")
+
+    #check if valid bid 
+    doc_ref = db.collection(u'Wallet')
+    query = doc_ref.where(u'uid', u'==', uid)
+    for document in query.stream():
+        wallet_info = document.to_dict()
+            
+    if(wallet_info['Wallet']>=int(bid)):
+        print("Bid is valid")
+        doc_ref = db.collection(u'Bids').document(post_id)
+        if(doc_ref.get().to_dict()==None):
+            #first bid        
+            #code to add bid in the collection
+            print("First Bid")
+            db.collection(u'Bids').document(post_id).set({'Amount':bid,"uid":uid})
+
+        else:
+            bid_info = doc_ref.get().to_dict()
+            if(bid_info['Amount']<bid):
+                print("New Bid is greater than old")
+                #code for udpdating the bid for posting
+                db.collection(u'Bids').document(post_id).update({'Amount':bid,"uid":uid})
+    else:
+        print("User is capping.")
+    
+    return "Done"
 
 if __name__ == '__main__':
     cred = credentials.Certificate("helius.json")

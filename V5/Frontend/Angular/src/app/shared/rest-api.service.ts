@@ -12,6 +12,12 @@ export interface transaction {
   quantity: number;
 }
 
+export interface bid {
+  uid:  String;
+  Post_Id: String;
+  Amount: number;
+}
+
 export interface port {
   node_address: String;
 }
@@ -23,7 +29,7 @@ export class RestApiService {
   
   //Define API urls
   serverURL = 'http://localhost:8003';
-  weatherURL = 'http://localhost:8004';
+  weatherURLV5 = 'http://localhost:8004';
   v5URL = 'http://localhost:8003';
   v4URL = 'http://localhost:8000';
 
@@ -35,9 +41,19 @@ export class RestApiService {
     quantity: "420",
   }
 
+  testBid = {
+    uid:  "NOtcKxDvogdK9JbDTacpUbb1EiC2",
+    Post_Id: "444",
+    Amount: 15,
+  }
+
   //this format works for json posts
   testProd = {
-    author: "Yash",
+    author: "NOtcKxDvogdK9JbDTacpUbb1EiC2",
+  }
+
+  testUid = {
+    author: "NOtcKxDvogdK9JbDTacpUbb1EiC2",
   }
 
   constructor(private http: HttpClient) { }
@@ -53,6 +69,7 @@ export class RestApiService {
       'Access-Control-Allow-Origin': '*'
     })
   }
+
   
     // HttpClient API get() method => Fetch chain data
     getChain(): Observable<Chain> {
@@ -63,16 +80,10 @@ export class RestApiService {
       )
     }
 
-    //FOR DEBUGGING
-    //Gets the solar production data in an array
-    // getProduction(): Observable<Production> {
-    //   return this.http.get<Production>(this.weatherURL + '/solar_production')
-    // }
-
     //Sends userID to production server
     postProduction(){
       //we pass this a premade object from above
-      return this.http.post(this.weatherURL + '/solar_production', this.testProd)
+      return this.http.post(this.weatherURLV5 + '/solar_production', this.testProd)
       //TODO
       //Returns or displays 2 production datas
     }
@@ -86,14 +97,41 @@ export class RestApiService {
       })
     }
 
-      //Connect to other networks
-      connectToChain(value: port): any {
-        this.http.post(this.v5URL + '/register_with', value)
-        .toPromise()
-        .then(data => {
-          console.log(data);
-        })
-      }
+    //Connect to other networks
+    connectToChain(value: port): any {
+      this.http.post(this.v5URL + '/register_with', value)
+      .toPromise()
+      .then(data => {
+        console.log(data);
+      })
+    }
+    
+    //get the Consumption from the weather server
+    ///THIS IS BIDDDDDDDD
+    postConsumption(){
+      return this.http.post(this.weatherURLV5 + '/solar_consumption', this.testProd)
+    }
+
+    postBid(bid: bid){
+      return this.http.post(this.weatherURLV5 + '/validate_bid', bid)
+    }
+
+    //get the surplus from the server from the weather server
+    postSurplus(){
+      return this.http.post(this.weatherURLV5 + '/surplus', this.testUid)
+    }
+
+    //get the surplus from the server from the weather server
+    // postBid(){
+      
+    //   let bid = {
+    //     uid:  "mFSXDDIf4rc0IfIYD6JVGAbmiaf1",
+    //     Post_Id: "444",
+    //     Amount: 15,
+    //   }
+    //   return this.http.post(this.weatherURLV5 + '/solar_consumption', bid)
+    // }
+
 
     // Error handling 
   handleError(error: { error: { message: string; }; status: any; message: any; }) {
@@ -108,4 +146,15 @@ export class RestApiService {
     window.alert(errorMessage);
     return throwError(errorMessage);
  }
+
+  /////////////////////////FOR DEVELOPMENT AND TESTING //////////////////////////////////////////
+
+  //FOR DEBUGGING
+  //Gets the solar production data in an array
+  // getProduction(): Observable<Production> {
+  //   return this.http.get<Production>(this.weatherURL + '/solar_production')
+  // }
+
+
+  /////////////////////////END DEVELOPMENT AND TESTING //////////////////////////////////////////
 }

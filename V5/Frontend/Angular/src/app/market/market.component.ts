@@ -17,6 +17,9 @@ import { element } from 'protractor';
 import {MatTableModule} from '@angular/material/table';
 import { TestBed } from '@angular/core/testing';
 import {MDCDataTable} from '@material/data-table';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FormControl } from '@angular/forms';
+
 
 
 //New rest stuff
@@ -26,6 +29,8 @@ import { snapshotChanges } from '@angular/fire/database';
 //Theming
 import {OverlayContainer} from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
+import { time } from '@tensorflow/tfjs';
+
 
 
 
@@ -45,17 +50,23 @@ export interface test {
   peers: string;
 }
 
+export interface bid {
+  uid:  String;
+  Post_Id: String;
+  Amount: number;
+}
+
 export interface transaction {
   author: String;
   buyer:  String;
   seller: String;
   quantity: number;
+  bidValue: number;
 }
 
 export interface port {
   node_ddress: String;
 }
-
 
 
 @Component({
@@ -94,28 +105,26 @@ export class MarketComponent implements OnInit {
   Chain: any = [];
   
 
-  displayedColumns = ['user_name',  'Energy'];
+  displayedColumns = ['user_name',  'Energy', 'Bid', 'Bid Button'];
   dataSource: Observable<Postings[]> | any;
   dataDisplay: Observable<test[]> | undefined;
 
   //Production variables
   Production: any = [];
+  Consumption: any = [];
+  Surplus: any = [];
 
+  //value = 'Enter Bid';
   
   /////////////////////////START DEVELOPMENT AND TESTING //////////////////////////////////////////
   
   //temp user
   parser = new DOMParser();
 
-  currentUser = "mFSXDDIf4rc0IfIYD6JVGAbmiaf1";
-
-
-
-
+  testval = 0;
+  currentUser = "zvDRU1bQ0uNJTupmjnRt10MktYF3";
   // uid = JSON.parse(window.localStorage.getItem('user'));
-
   // uid2 = ""
-
   //let obj = JSON.parse(current)
   //Basic date
   myDate = Date.now();
@@ -125,12 +134,14 @@ export class MarketComponent implements OnInit {
   //dataTest:Observable<any[]>;
   //buttonTest = '1';
   ProductionArraySum: number[] = [];
-
   testBuy: String = ""
 
+
+  /////Dynamic form stuff
+  name = new FormControl('');
+
+
   /////////////////////////END DEVELOPMENT AND TESTING //////////////////////////////////////////
-
-
 
   //Initializes APIs for use throughout Helius
   constructor(
@@ -148,15 +159,12 @@ export class MarketComponent implements OnInit {
       this.itemCollection = this.firestore.collection('Postings');
       this.items = this.itemCollection.valueChanges();
 
+      //TESTING
       //this.currentUser = this.firebaseService.firebaseAuth.currentUser.uid();
-
-
       //overlayContainer.getContainerElement().classList.add('dark-theme-mode');
       //this.items = this.itemCollection.valueChanges()._subscribe( data => {
 
     }
-
-    //Functions for MarketComponent
 
     //Gets values in current users wallet
     checkWallet(){
@@ -172,43 +180,19 @@ export class MarketComponent implements OnInit {
       this.firestore.collection("Postings").doc(seller).delete();
     }
 
-    //Called when a user selects "Buy" in posting
-    buyEnergy(seller: string, quantity: number){
-
-    // Get "author", "buyer", "seller", "quantity"
-    let transaction = {
-        author: "Marko",
-        buyer:  "Marko",
-        seller: seller,
-        quantity: quantity,
+    //Sends V4s port address to V5s node server
+    connectToNetwork(){
+      let port = {
+        node_address: 'localhost:8000',
       }
-
-      //Diable buy button for 3 seconds
-
-      //send data to chain for processing  
-      this.restApi.postChain(transaction);
-
-      //check if transaction was good
-
-      //Delete Posting
-      this.deletePosting(seller)
+      this.restApi.connectToChain(port);
     }
 
-      //Sends V4s port address to V5s node server
-      connectToNetwork(){
-        let port = {
-          node_address: 'localhost:8000',
-        }
-  
-        this.restApi.connectToChain(port);
-      }
-
+    //TESTING
+    //passsing UID around
     passUid(uid:string){
       // this.uid2 = uid;
-
-    }
- 
-       
+    }   
 
     //When the compnent loads, these functions run
     async ngOnInit(){
@@ -226,16 +210,51 @@ export class MarketComponent implements OnInit {
     }
 
 
-
   /////////////////////////FOR DEVELOPMENT AND TESTING //////////////////////////////////////////
 
+   //Called when a user selects "Bid" in posting
+   buyEnergy(postID: number, Energy: number, bidValue: number){
+
+    // Get "author", "buyer", "seller", "quantity"
+    // let transaction = {
+    //     author: "Marko",
+    //     buyer:  "Marko",
+    //     seller: seller,
+    //     quantity: quantity,
+    //     //bidValue: bidValue,
+    //   }
+    //   send data to chain for processing  
+    //   this.restApi.postChain(transaction);
+
+      //convert bidVal to int for sure
+      //var safeBidVal= parseInt(bidVal)
+
+      
+      this.testval = bidValue
+      var tempPostID = postID.toString()
+
+      //Send bid to server
+      let bid = {
+        uid:  this.currentUser,
+        Post_Id: tempPostID,
+        Amount: bidValue,
+      }
+
+      console.log(bid)
+      this.postBid(bid)
+
+      //Delete Posting
+      //this.deletePosting(seller)
+    }
+
+    
   //Loads the entire chain
   loadChain() {
     return this.restApi.getChain().subscribe((data: {}) => {
       this.Chain.push(data)
     })};
   
-    //Adds a placeholder posting for
+    //Adds a placeholder posting for testing
     addPosting(){
       var markoUpdate = this.firestore.collection("Postings").doc("Marko")
       markoUpdate.set({
@@ -252,28 +271,42 @@ export class MarketComponent implements OnInit {
       var yashUpdate = this.firestore.collection("Postings").doc("Yash")
       yashUpdate.set({
         user_name: "Yash",
-        Energy: 1,
+        Energy: 333,
+      });
+
+      var yassineUpdate = this.firestore.collection("Postings").doc("Yassine")
+      yassineUpdate.set({
+        user_name: "Yassine",
+        Energy: 420,
       });
     }
 
-    //FOR DEBUGGING ONLY
-  // loadProduction() {
-  //     //this.restApi.getProduction();
-  //     return this.restApi.getProduction().subscribe((data: {}) => {
-  //       this.Production.push(data)
-  //   })};
+    addUserPosting(){
 
+      //Create random ID
+      var randDocId = Math.floor(Math.random() * 100000).toString();
+
+      //Make a new posting using ranomd ID
+      var userUpdate = this.firestore.collection("Postings").doc(randDocId)
+      userUpdate.set({
+        Energy: 666,
+        Owner: this.currentUser,
+        PostID: randDocId,
+        
+        //Hardcoded time
+        Time: "22:00"
+      });
+    }
   //Calculate the sum of the production array
   //FUCK THIS
   calcSumProductionArray(){
     var sum = 1;
     let temp: any[] = [];
-
     var i;
+
     for(i in this.Production){
       this.ProductionArraySum[0] += this.Production[i];
       //this.ProductionArraySum += this.Production[i];
-
     }
   }
 
@@ -285,22 +318,52 @@ export class MarketComponent implements OnInit {
       this.calcSumProductionArray();
   })};
 
-  cleanProdArray(){
-    this.Production = 0;
+  //Sends request for solar production data
+  postConsumption(){
+    return this.restApi.postConsumption().subscribe((data: {}) => {
+      this.Consumption.push(data)
+  })};
+
+  postBid(bid: bid){
+    return this.restApi.postBid(bid).subscribe((data: {}) => {
+      //this.Consumption.push(data)
+  })};
+
+  //Sends request for solar production data
+  postSurplus(){
+    return this.restApi.postSurplus().subscribe((data: {}) => {
+      this.Consumption.push(data)
+  })};
+
+  getBidValue(bid: number){
+    console.warn(bid)
   }
+
+
+
+
+  /////////////////////////END DEVELOPMENT AND TESTING //////////////////////////////////////////
+  
   //   this.Production = this.restApi.postProduction();
   // }
+  
+  //   isLoggedIn() {
+  //     return this.afAuth.authState.pipe(first()).toPromise();
+  //  }
 
   //Sends dummy data to chain
   newTransaction(){
     //this.restApi.postChain();
   }
 
-   //   isLoggedIn() {
-  //     return this.afAuth.authState.pipe(first()).toPromise();
-  //  }
-
-  /////////////////////////END DEVELOPMENT AND TESTING //////////////////////////////////////////
-
+  cleanProdArray(){
+    this.Production = 0;
+  }
+      //FOR DEBUGGING ONLY
+  // loadProduction() {
+  //     //this.restApi.getProduction();
+  //     return this.restApi.getProduction().subscribe((data: {}) => {
+  //       this.Production.push(data)
+  //   })};
 
 };

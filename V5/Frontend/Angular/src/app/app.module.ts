@@ -42,6 +42,8 @@ import {MatInputModule} from '@angular/material/input';
 import {MatListModule} from '@angular/material/list';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatTableModule} from '@angular/material/table';
+import {MatFormFieldModule} from '@angular/material/form-field';
+
 
 //Fireatore stuff
 import { AngularFirestoreCollection } from '@angular/fire/firestore';
@@ -50,6 +52,8 @@ import { AngularFirestoreCollection } from '@angular/fire/firestore';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
+
+import { ReactiveFormsModule } from '@angular/forms';
 
 // Forms module
 
@@ -82,6 +86,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     MatGridListModule,
     MatTableModule,
     MatSlideToggleModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
 
     //Firebase setup
     AngularFireModule.initializeApp({

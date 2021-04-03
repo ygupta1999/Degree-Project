@@ -1,0 +1,91 @@
+<!-- Once user has logegd in, they see this home page  -->
+
+<!-- CSS Style  -->
+<style>
+  button {
+    display: block;
+  }
+
+  .center {
+  text-align: center;
+  }
+
+  </style>
+<!-- End of CSS Style  -->
+
+<!-- Navigation Toolbar  -->
+<mat-toolbar style="font-size: large;" [ngClass]="{'dark-theme-mode':isDarkTheme}">
+
+
+  <!-- Fix getting Name for the title of the Nav Bar -->
+  <!-- <span *ngIf="let name of currentUser | async">{{name.email}}</span> -->
+<button mat-icon-button [matMenuTriggerFor]="menu"  aria-label="Example icon-button with a menu">
+  <mat-icon style="font-size: 250%;">menu</mat-icon>
+</button>
+  <!-- Ttile based on logged in placeholder user  -->
+  <span *ngFor="let t of name2" style="font-size: 160%;">  V1.6 {{t.name}} </span>
+  
+
+  <mat-menu #menu="matMenu" [ngClass]="{'dark-theme-mode':isDarkTheme}">
+  <button  mat-menu-item (click)="showHome()" class="btn home">Home</button>
+  <button mat-menu-item (click)="showMarket()"class="btn market">Market</button>
+  <button mat-menu-item (click)="showHistory()"class="btn history">History</button>
+  <button mat-menu-item (click)="logout()">Logout</button>
+  </mat-menu>
+</mat-toolbar>
+ <!-- End of Navigation Toolbar  -->
+
+<!-- ACTUAL HOME-->
+<div id="home" *ngIf="Home">
+
+  <h2 style="text-align: center; font-family: Arial, Helvetica, sans-serif;" *ngFor="let t of name2" [formControl]="nameControl">Welcome Home, {{t.name}}</h2>
+  <h5 style="text-align: center ; font-family: Arial, Helvetica, sans-serif;" *ngFor="let t of name2" >Current Wallet: {{t.wallet}} </h5>
+  <h5 style="text-align: center ; font-family: Arial, Helvetica, sans-serif;">Date: {{today | date }} </h5>
+
+
+    <div *ngIf="!div1">
+      <h5 style="text-align: center ; font-size: x-large; font-family: Arial, Helvetica, sans-serif;">Loading todays energy predictions...</h5>
+      <!-- <p style="font-weight: bold;">Loading todays energy predictions...</p> -->
+      <mat-progress-bar mode="query"></mat-progress-bar>
+    </div>
+
+    <!-- Suplus Chasrt -->
+    <google-chart style="align-content: center;" chart="chartObject" *ngIf="div1"
+    [title]="title"
+    [type]= "type"
+    [data]="myData"
+    [columns]="columnNames"
+    [options]="options"
+    [width]="width"
+    [height]="height">
+    </google-chart>
+
+
+    <h4 *ngFor="let cons of Consumption" style="text-align: center;" onload="passValue(cons.Energy)" [formControl]="homeFormController">
+      Todays Surplus is: {{cons.Energy | number: '1.0-3'}} and will be avalible for sale at {{cons.Time}}
+    </h4>
+    <p></p>
+    <!-- <p *ngIf="div1">{{productionChart | json}}</p> -->
+
+    <!-- <p *ngFor="let t of test2"> YOOO{{t.wallet}}</p> -->
+    
+    <button mat-raised-button *ngIf="div1" color="warn" style="width: 100%; height: 50px; font-size: large;" (click)="addHomePosting(homeFormController.value)">
+      Create new market post from projected surplus!
+    </button>
+    <p></p>
+
+    <!-- <p>{{newUser}}</p> -->
+
+</div>
+
+
+<div id="market" *ngIf="Market">
+  <app-market></app-market>
+</div>
+
+<div id="history" *ngIf="History">
+  <app-history></app-history>
+</div>
+
+
+

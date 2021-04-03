@@ -1,0 +1,160 @@
+<!doctype html>
+<html color="primary">
+
+<head>
+<meta charset="utf-8">
+</head>
+
+<h2 style="text-align: center; font-family: Arial, Helvetica, sans-serif;">Marketplace</h2>
+  <!-- Marketplace table -->
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <!-- Seller Column -->
+  <ng-container matColumnDef="user_name">
+    <th mat-header-cell *matHeaderCellDef style="font-size: x-large;"> Post Id </th>
+    <td  mat-cell *matCellDef="let element"  style="font-size: larger;" > {{element.PostID}} </td>
+  </ng-container>
+
+  <!-- Cost Column -->
+  <ng-container matColumnDef="Energy">
+    <th mat-header-cell *matHeaderCellDef style="font-size: x-large;" > Energy Credits </th>
+    <td mat-cell *matCellDef="let element" style="font-size: larger;">{{element.Energy}} 
+    </td>
+  </ng-container>
+
+  <!-- Bid Column -->
+  <ng-container matColumnDef="Bid">
+    <th mat-header-cell *matHeaderCellDef style="font-size: x-large;" > Bid Value </th>
+    <!-- Cell Contents -->
+    <td mat-cell  *matCellDef="let element" >
+    <!-- Bid Input Section -->
+    <mat-form-field class="example-form-field" appearance="outline" >
+      <input matInput type="number" value=1 id="{{element}}" [formControl]="name" >
+      <!-- <button mat-button  matSuffix mat-icon-button aria-label="Clear" > -->
+      <!-- <mat-icon>close</mat-icon> -->
+      <!-- </button> -->
+
+    </mat-form-field>
+
+    </td>
+  </ng-container>
+
+  <!-- Bid Button Column -->
+  <ng-container matColumnDef="Bid Button">
+    <th mat-header-cell *matHeaderCellDef style="font-size: x-large;" > Bid </th>
+    <!-- Cell Contents -->
+    <td mat-cell *matCellDef="let element">
+    <!-- Bid Button -->
+      <button mat-raised-button color="warn" style="font-size: x-large; size: 200%;" (click)="buyEnergy(element.PostID, element.Energy, name.value)">Bid</button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<br>
+
+<!--  /////////////////////////START DEVELOPMENT AND TESTING ////////////////////////////////////////// -->
+<!-- Posting Utilities -->
+
+<!-- <p>{{newUser}}</p> -->
+
+<mat-accordion>
+  <mat-expansion-panel hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title style="font-size: x-large;">
+        Utilties
+      </mat-panel-title >
+      <mat-panel-description style="font-size: x-large;" >
+        Used for demo and development
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+      <!-- Content of drop down -->
+      <p>This is the primary content of the panel.</p>
+      <button mat-raised-button color="primary" (click)="addUserPosting(222)">Add User Posting</button>
+
+      <mat-form-field class="example-form-field" appearance="outline" >
+        <input matInput type="number" value=666 id="userValue" [formControl]="name">
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="addUserPosting(name.value)">Add Custon User Posting</button>
+    
+      <h2 class="test1">Custon Energy Selling</h2>
+      <mat-form-field class="example-form-field" appearance="outline" >
+        <input matInput type="number" value=666 id="userValue" [formControl]="name">
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="addUserPosting(name.value)">Add Custon User Posting</button>
+      
+      <!-- Blockchain Utilities-->
+      <h1 class="test1">BlockChain Tools</h1>
+      <button mat-raised-button color="primary" (click)="loadChain()">Load Chain</button>
+      <button mat-raised-button color="primary" (click)="connectToNetwork()">Connect to v1.7 Network</button>
+      <button mat-raised-button color="primary" (click)="newTransaction()">Fake transaction</button>
+
+      <br>
+
+      <!-- Solar Production Utilities-->
+      <h2 class="test1">Solar Production Tools</h2>
+      <button mat-raised-button color="primary" (click)="postProduction()">"Post" Production</button>
+      <button mat-raised-button color="primary" (click)="calcSumProductionArray()">Sum Production Array</button>
+      <button mat-raised-button color="primary" (click)="cleanProdArray()">Clean Production Array</button>
+      <br>
+
+      <!-- Solar Production Utilities-->
+      <h2 class="test1">Solar Consumption Tools</h2>
+      <button mat-raised-button color="primary" (click)="postConsumption()">"Post" Consumption</button>
+      <br>
+
+      <!-- Solar Surplus Utilities-->
+      <h2 class="test1">Solar Surplus Tools</h2>
+      <button mat-raised-button color="primary" (click)="postSurplus()">"Post" Surplus</button>
+      <br>
+
+            <!-- Bid Utilities -->
+      <h2 class="test1">Bid Tools</h2>
+      <label>
+        Name:
+        <input type="text" [formControl]="name">
+      </label>
+      <p>
+        Value: {{ name.value }}
+      </p>
+
+      <!-- Data Viz-->
+      <h2 class="test1">Data Visualizations</h2>
+      <br>
+      <div *ngFor="let chain of Chain">
+        CHAIN: {{chain | json}}
+      </div>
+      <br>
+      <div *ngFor="let prod of Production">
+        PRODUCTION: {{prod | json}}
+      </div>
+      <br>
+      <div *ngFor="let cons of Consumption">
+        CONSUMPTION: {{cons | json}}
+      </div>
+
+      <!-- Other Viz -->
+      <h2 class="test1">Testing Visualizations</h2>
+      <div >Sum of Production Array = {{ProductionArraySum}}</div>
+      <div >Test Values = {{today |  date:'shortTime'}}</div>
+              <!-- End of content -->
+  </mat-expansion-panel>
+</mat-accordion>
+
+
+
+
+<!-- DEPRECATED -->
+<!-- <button mat-raised-button color="primary" (click)="loadProduction()">Load Production data</button> -->
+<!-- <button mat-raised-button color="primary" (click)="newTransaction()">Post Chain</button> -->
+<!-- <button mat-raised-button color="primary" (click)="passUid(uid.uid)">Passit!</button> -->
+<!-- <div >Uid = {{uid2}}</div> -->
+<!-- Basic examples of reading from firebase-->
+<!-- <p>Todays date is: {{myDate | date:'shortDate'}} </p> -->
+<!-- <span class="example-spacer" *ngFor="let name of Users | async">Your expected prodiction today is {{name.prod}} kWh</span> -->
+<!-- <span class="example-spacer" *ngFor="let name of Users | async">Your expected prodiction today is {{name.cons}} kWh</span> -->
+<!-- <span class="example-spacer" *ngFor="let name of Users | async">Your expected surplus today is {{name.prod - name.cons}} kWh</span> -->
+<!-- <span class="example-spacer" *ngFor="let name of Users | async">Wallet: {{name.wallet}} </span> -->
+
+<!--  /////////////////////////END DEVELOPMENT AND TESTING ////////////////////////////////////////// -->

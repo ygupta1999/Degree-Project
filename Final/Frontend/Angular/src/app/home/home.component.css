@@ -1,0 +1,129 @@
+.btn1 {
+    color : rgb(232, 232, 232);
+    background-color: #1e5b61;
+    font-size: 16px;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    margin: 0px;
+
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+.text {
+  color: #e3e3e3;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bolder;
+  /* color: rgb(232, 232, 232); */
+}
+
+.info {
+  clear: both;
+  padding: 10px;
+  font-size: 0.9em;
+}
+a.link {
+  color: rgb(47, 227, 255);
+  text-decoration: none;
+}
+
+.warn {
+  font-size: 0.8em;
+  background-color: darken(orange, 15%);
+  color: #fff;
+  padding: 10px;
+}
+
+
+/* ------ Default Style ---------- */
+.gauge-container {
+  width: 300px;
+  height: 300px;
+  display: block;
+  float: left;
+  padding: 10px;
+  /* background-color: #222; */
+  margin: 7px;
+  border-radius: 3px;
+  position: relative;
+}
+.gauge-container > .label {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: inline-block;
+  background: #1e5b61;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.8em;
+  font-weight: bolder;
+  padding: 5px 10px;
+}
+.gauge-container > .gauge .dial {
+  stroke: #334455;
+  stroke-width: 2;
+  fill: rgba(0,0,0,0);
+}
+.gauge-container > .gauge .value {
+  stroke: rgb(47, 227, 255);
+  stroke-width: 2;
+  fill: rgba(0,0,0,0);
+}
+.gauge-container > .gauge .value-text {
+  fill: rgb(47, 227, 255);
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 0.8em;
+}
+
+/* ------- Alternate Style ------- */
+.wrapper {
+  height: auto;
+  float: left;
+  margin: 7px;
+  overflow: hidden;
+}
+.wrapper > .gauge-container {
+  margin: 0;
+}
+
+.gauge-container.two {
+
+}
+.gauge-container.two > .gauge .dial {
+  stroke: #334455;
+  stroke-width: 10;
+}
+.gauge-container.two > .gauge .value {
+  stroke: orange;
+  stroke-dasharray: none;
+  stroke-width: 13;
+}
+.gauge-container.two > .gauge .value-text {
+  fill: #ccc;
+  font-weight: 100;
+  font-size: 10;
+}
+
+/* 
+mwl-gauge {
+  width: 300px;
+  height: 300px;
+  display: block;
+  padding: 10px;
+}
+mwl-gauge > .gauge > .dial {
+  stroke: #eee;
+  stroke-width: 2;
+  fill: rgba(0, 0, 0, 0);
+}
+mwl-gauge > .gauge > .value {
+  stroke: rgb(47, 227, 255);
+  stroke-width: 2;
+  fill: rgba(0, 0, 0, 0);
+}
+mwl-gauge > .gauge > .value-text {
+  fill: rgb(47, 227, 255);
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 1em;
+} */
